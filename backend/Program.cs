@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MinimalApiJwt.Endpoints;
+using MinimalApiJwt.Hubs;
 using MinimalApiJwt.Services;
 
 // STEP 1: WebApplication.CreateBuilder
@@ -24,6 +25,23 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 
 // Student Service register
 builder.Services.AddScoped<IStudentService, StudentService>();
+
+// ============================================================
+// SIGNALR CONFIGURE PANNUVOM
+// Tanglish: Real-time bi-directional communication enable pannuvom
+// WebSocket use pannuvom - HTTP unlike oru connection open aa irukum
+// ============================================================
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;         // Development - detailed errors show
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15); // Connection alive keep pannuvom
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+});
+
+// Background Service - every 2 seconds stats broadcast pannuvom
+builder.Services.AddHostedService<DashboardBackgroundService>();
+// Singleton aa register - other services inject pannalam
+builder.Services.AddSingleton<DashboardBackgroundService>();
 
 // ============================================================
 // STEP 3: JWT AUTHENTICATION CONFIGURE PANNUVOM
@@ -161,7 +179,7 @@ builder.Services.AddCors(options =>
               )
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowCredentials(); // SignalR ku AllowCredentials mandatory!
     });
 });
 
@@ -206,13 +224,20 @@ app.UseAuthorization();
 app.MapAuthEndpoints();     // /api/v1/auth/login
 app.MapStudentEndpoints();  // /api/v1/students, /api/v2/students
 
-// Health check endpoint - application running aa check pannuvom
+// ============================================================
+// SIGNALR HUB MAP PANNUVOM
+// Tanglish: /hubs/dashboard URL la SignalR connection accept pannuvom
+// Angular la: new HubConnectionBuilder().withUrl("/hubs/dashboard")
+// ============================================================
+app.MapHub<DashboardHub>("/hubs/dashboard");
+
+// Health check endpoint
 app.MapGet("/health", () => Results.Ok(new
 {
     Status = "Healthy",
     Timestamp = DateTime.UtcNow,
     Version = "1.0.0",
-    Service = "MinimalAPI JWT - SmartSchool"
+    Service = "MinimalAPI JWT - SmartSchool + SignalR"
 })).AllowAnonymous().WithTags("Health");
 
 // ============================================================

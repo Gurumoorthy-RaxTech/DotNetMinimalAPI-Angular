@@ -21,7 +21,7 @@ export interface StudentModel {
 export class StudentService {
 
   // V2 API use pannuvom - course filter feature irukku
-  private apiUrl = 'https://localhost:7001/api/v2/students';
+  private apiUrl = 'https://localhost:5260/api/v2/students';
 
   constructor(private http: HttpClient) {}
 

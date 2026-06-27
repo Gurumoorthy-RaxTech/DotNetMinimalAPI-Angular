@@ -31,7 +31,7 @@ export interface ApiResponse<T> {
 })
 export class AuthService {
 
-  private apiUrl = 'https://localhost:7001/api/v1/auth';
+  private apiUrl = 'https://localhost:5260/api/v1/auth';
 
   // BehaviorSubject - login state track pannuvom
   // Components subscribe panlam - auto update aagum

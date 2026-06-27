@@ -1,0 +1,166 @@
+<!-- REALTIME SIGNALR DASHBOARD -->
+<div class="rt-dashboard">
+
+  <!-- Toast Notifications (top-right) -->
+  <div class="toast-container">
+    @for (notif of notifications; track notif.id) {
+      <div class="toast" [class]="'toast-' + notif.type">
+        <div class="toast-header">
+          <strong>{{ notif.title }}</strong>
+          <span class="toast-time">{{ notif.timestamp }}</span>
+          <button (click)="dismissNotification(notif.id)">✕</button>
+        </div>
+        <div class="toast-body">{{ notif.message }}</div>
+      </div>
+    }
+  </div>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2>⚡ Real-Time Dashboard</h2>
+      <p class="sub">Live updates via SignalR WebSocket</p>
+    </div>
+    <div class="connection-badge" [class]="getConnectionClass()">
+      {{ getConnectionIcon() }} {{ connectionState | uppercase }}
+    </div>
+  </div>
+
+  <!-- Stats Cards Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon blue">🎓</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats?.totalStudents ?? '—' }}</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-live">Live</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">👥</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ connectedUsers }}</div>
+        <div class="stat-label">Connected Users</div>
+        <div class="stat-live">Live</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">📚</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats?.totalCourses ?? '—' }}</div>
+        <div class="stat-label">Total Courses</div>
+        <div class="stat-live">Live</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple">⏱️</div>
+      <div class="stat-body">
+        <div class="stat-value time">{{ stats?.serverTime ?? '--:--:--' }}</div>
+        <div class="stat-label">Server Time</div>
+        <div class="stat-live">Live</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">🔥</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats?.cpuUsage ?? 0 }}%</div>
+        <div class="stat-label">CPU Usage</div>
+        <div class="stat-live">Live</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon teal">💾</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats?.memoryUsageMb ?? 0 }} MB</div>
+        <div class="stat-label">Memory</div>
+        <div class="stat-live">Live</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts + Activity Row -->
+  <div class="main-row">
+
+    <!-- CPU Live Bar Chart -->
+    <div class="chart-card">
+      <div class="card-header">📊 CPU Usage — Last 10 Readings</div>
+      <div class="bar-chart">
+        @for (val of cpuHistory; track $index) {
+          <div class="bar-wrap">
+            <div class="bar cpu-bar" [style.height]="getBarHeight(val, 100)">
+              <span class="bar-tip">{{ val }}%</span>
+            </div>
+            <div class="bar-label">{{ $index + 1 }}</div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Memory Live Bar Chart -->
+    <div class="chart-card">
+      <div class="card-header">💾 Memory (MB) — Last 10 Readings</div>
+      <div class="bar-chart">
+        @for (val of memHistory; track $index) {
+          <div class="bar-wrap">
+            <div class="bar mem-bar" [style.height]="getBarHeight(val, 500)">
+              <span class="bar-tip">{{ val }}</span>
+            </div>
+            <div class="bar-label">{{ $index + 1 }}</div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="activity-card">
+      <div class="card-header">📋 Live Activity Feed</div>
+      <div class="activity-list">
+        @for (activity of activities; track activity.id) {
+          <div class="activity-item" [class]="'activity-' + activity.type">
+            <div class="activity-action">{{ activity.action }}</div>
+            <div class="activity-msg">{{ activity.message }}</div>
+            <div class="activity-meta">{{ activity.user }} · {{ activity.timestamp }}</div>
+          </div>
+        } @empty {
+          <div class="no-activity">
+            <span>🔄 Waiting for activity...</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- SignalR Controls -->
+  <div class="controls-row">
+    <div class="control-card">
+      <div class="card-header">🔌 SignalR Controls</div>
+      <div class="controls">
+        <button class="btn btn-blue" (click)="sendPing()">📡 Ping Server</button>
+        <div class="broadcast-group">
+          <input type="text" [(ngModel)]="broadcastMessage" placeholder="Broadcast message to all users..." class="broadcast-input" (keyup.enter)="sendBroadcast()" />
+          <button class="btn btn-green" (click)="sendBroadcast()">📢 Broadcast</button>
+        </div>
+      </div>
+      <div class="signalr-info">
+        <div class="info-item"><span class="label">Hub URL:</span> <code>/hubs/dashboard</code></div>
+        <div class="info-item"><span class="label">Transport:</span> <code>WebSockets</code></div>
+        <div class="info-item"><span class="label">Auth:</span> <code>JWT Bearer Token</code></div>
+        <div class="info-item"><span class="label">Update:</span> <code>Every 2 seconds</code></div>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="control-card how-it-works">
+      <div class="card-header">📖 How SignalR Works (Interview)</div>
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><span>Angular connects to <code>/hubs/dashboard</code> with JWT token</span></div>
+        <div class="step"><span class="step-num">2</span><span><code>OnConnectedAsync()</code> fires — server notifies all clients</span></div>
+        <div class="step"><span class="step-num">3</span><span>Background service broadcasts stats every 2s to all clients</span></div>
+        <div class="step"><span class="step-num">4</span><span>Angular <code>hubConnection.on('StatsUpdated')</code> receives data</span></div>
+        <div class="step"><span class="step-num">5</span><span>UI updates automatically — no polling, no page refresh</span></div>
+        <div class="step"><span class="step-num">6</span><span><code>OnDisconnectedAsync()</code> fires on tab close/logout</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -29,6 +29,13 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  // Realtime SignalR Dashboard
+  {
+    path: 'realtime',
+    loadComponent: () => import('./components/realtime-dashboard/realtime-dashboard').then(m => m.RealtimeDashboard),
+    canActivate: [authGuard]
+  },
+
   // Wildcard - 404 page
   { path: '**', redirectTo: 'login' }
 ];
