@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Complete Guide — Step by Step + Interview Q&A | Gurumoorthy M</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',sans-serif; background:#0d1117; color:#e6edf3; line-height:1.8; }
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero { background:linear-gradient(135deg,#1a1a2e,#0f2744,#0a3d62); padding:50px 30px; text-align:center; border-bottom:3px solid #61dafb; }
+.hero h1 { font-size:2.6em; color:#fff; margin-bottom:10px; }
+.hero h1 span { color:#61dafb; }
+.hero p { color:#8b949e; font-size:1.1em; margin-bottom:16px; }
+.badge { display:inline-block; background:rgba(97,218,251,0.15); border:1px solid rgba(97,218,251,0.4); color:#61dafb; padding:4px 14px; border-radius:20px; font-size:0.85em; margin:4px; }
+.badge.green { background:rgba(46,160,67,0.15); border-color:rgba(46,160,67,0.4); color:#3fb950; }
+.badge.orange { background:rgba(255,166,87,0.15); border-color:rgba(255,166,87,0.4); color:#ffa657; }
+
+/* ── Nav Tabs ─────────────────────────────────────── */
+.tabs { display:flex; background:#161b22; border-bottom:1px solid #30363d; position:sticky; top:0; z-index:100; overflow-x:auto; }
+.tab { padding:14px 24px; color:#8b949e; font-size:0.95em; font-weight:600; cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; transition:all 0.2s; }
+.tab:hover { color:#e6edf3; background:#21262d; }
+.tab.active { color:#61dafb; border-bottom-color:#61dafb; }
+
+/* ── Sections ─────────────────────────────────────── */
+.section { display:none; }
+.section.active { display:block; }
+
+/* ── Steps ────────────────────────────────────────── */
+.step { margin:28px 20px; background:#161b22; border:1px solid #30363d; border-radius:14px; overflow:hidden; }
+.step-header { padding:20px 26px; display:flex; align-items:center; gap:16px; border-bottom:1px solid #30363d; }
+.step-num { background:#61dafb; color:#0d1117; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2em; font-weight:800; flex-shrink:0; }
+.step-title { font-size:1.2em; color:#f0f6fc; font-weight:700; }
+.step-sub { color:#8b949e; font-size:0.88em; margin-top:3px; }
+.step-body { padding:26px; }
+
+/* ── Code ─────────────────────────────────────────── */
+pre { background:#010409; border:1px solid #30363d; border-radius:8px; padding:18px; overflow-x:auto; font-size:0.87em; line-height:1.75; margin:12px 0; font-family:'Cascadia Code','Consolas',monospace; }
+.cmd { background:#0d1b0d; border:1px solid #2ea043; border-radius:8px; padding:14px 18px; font-family:'Cascadia Code','Consolas',monospace; font-size:0.9em; color:#7ee787; margin:12px 0; }
+.cmd::before { content:"$ "; color:#58a6ff; font-weight:bold; }
+.cmd-block { background:#0d1b0d; border:1px solid #2ea043; border-radius:8px; padding:14px 18px; font-family:'Cascadia Code','Consolas',monospace; font-size:0.87em; color:#7ee787; margin:12px 0; }
+.cmd-line { display:block; margin:2px 0; }
+.cmd-line::before { content:"$ "; color:#58a6ff; }
+.cmd-comment { color:#6e7681; font-style:italic; display:block; margin:6px 0 2px; }
+
+/* Syntax */
+.kw  { color:#ff7b72; }
+.cls { color:#ffa657; }
+.str { color:#a5d6ff; }
+.cmt { color:#8b949e; font-style:italic; }
+.dec { color:#d2a8ff; }
+.fn  { color:#79c0ff; }
+.val { color:#79c0ff; }
+.tag { color:#7ee787; }
+.attr{ color:#ffa657; }
+.jsx { color:#61dafb; }
+.num { color:#79c0ff; }
+.hook{ color:#d2a8ff; }
+
+/* ── Info Boxes ───────────────────────────────────── */
+.tanglish { background:#0a1f0a; border:1px solid #2ea043; border-left:4px solid #2ea043; border-radius:8px; padding:13px 17px; color:#7ee787; font-size:0.92em; margin:12px 0; }
+.tanglish::before { content:"🗣️ Tanglish: "; font-weight:bold; color:#3fb950; }
+.note { background:#0d1d36; border:1px solid #1f6feb; border-radius:8px; padding:12px 16px; color:#79c0ff; font-size:0.9em; margin:10px 0; }
+.note::before { content:"📌 Note: "; font-weight:bold; }
+.warn { background:#2d2005; border:1px solid #9e6a03; border-radius:8px; padding:12px 16px; color:#e3b341; font-size:0.9em; margin:10px 0; }
+.warn::before { content:"⚠️ Important: "; font-weight:bold; }
+.success { background:#0a1f0a; border:1px solid #2ea043; border-radius:8px; padding:12px 16px; color:#3fb950; font-size:0.9em; margin:10px 0; }
+.success::before { content:"✅ Result: "; font-weight:bold; }
+.tip { background:#1a2332; border:1px solid #1f6feb; border-radius:8px; padding:12px 16px; color:#adbac7; font-size:0.9em; margin:10px 0; }
+.tip::before { content:"💡 Interview Tip: "; color:#79c0ff; font-weight:bold; }
+.analogy { background:#1a1230; border:1px solid #6e40c9; border-left:4px solid #6e40c9; border-radius:8px; padding:12px 16px; color:#d2a8ff; font-size:0.9em; margin:10px 0; }
+.analogy::before { content:"🔁 C# Analogy: "; font-weight:bold; color:#a371f7; }
+
+/* ── File Tree ────────────────────────────────────── */
+.tree { background:#010409; border:1px solid #30363d; border-radius:8px; padding:16px; font-family:'Cascadia Code','Consolas',monospace; font-size:0.87em; line-height:2; margin:12px 0; }
+.tree .folder { color:#79c0ff; font-weight:bold; }
+.tree .file { color:#adbac7; }
+.tree .imp  { color:#f2cc60; font-weight:bold; }
+.tree .new  { color:#3fb950; }
+.tree .cmt2 { color:#6e7681; font-style:italic; }
+
+/* ── Compare Grid ─────────────────────────────────── */
+.compare { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:12px 0; }
+.cbox { background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:14px; }
+.cbox h4 { margin-bottom:8px; font-size:0.95em; }
+.cbox.react h4 { color:#61dafb; }
+.cbox.angular h4 { color:#dd0031; }
+.cbox.good h4 { color:#3fb950; }
+.cbox.bad  h4 { color:#ff7b72; }
+
+/* ── Table ────────────────────────────────────────── */
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.9em; }
+th { background:#21262d; color:#f0f6fc; padding:10px 14px; text-align:left; border:1px solid #30363d; }
+td { padding:9px 14px; border:1px solid #21262d; color:#adbac7; }
+tr:hover td { background:#161b22; }
+.green-cell { color:#3fb950; font-weight:600; }
+.red-cell   { color:#ff7b72; }
+.yellow-cell{ color:#e3b341; }
+
+/* ── Q&A ──────────────────────────────────────────── */
+.qa-card { background:#0d1117; border:1px solid #30363d; border-radius:10px; margin:14px 0; overflow:hidden; }
+.qa-q { background:#1c2128; padding:14px 18px; color:#e6edf3; font-weight:600; border-left:4px solid #f0883e; }
+.qa-q::before { content:"Q: "; color:#f0883e; }
+.qa-a { padding:14px 18px; color:#adbac7; font-size:0.95em; }
+.qa-a strong { color:#58a6ff; }
+.qa-t { background:#161b22; padding:10px 18px; font-size:0.88em; color:#7ee787; border-top:1px solid #21262d; }
+.qa-t::before { content:"💬 Tanglish: "; font-weight:bold; }
+
+/* ── Level Badge ──────────────────────────────────── */
+.level { display:inline-block; padding:2px 10px; border-radius:12px; font-size:0.75em; font-weight:700; margin-left:8px; vertical-align:middle; }
+.l1 { background:#1a472a; color:#7ee787; }
+.l2 { background:#2d2005; color:#e3b341; }
+.l3 { background:#3d1a1a; color:#ff7b72; }
+
+/* ── Section Label ────────────────────────────────── */
+.section-label { background:#21262d; color:#8b949e; font-size:0.78em; padding:4px 14px; display:inline-block; border-radius:12px; margin-bottom:10px; }
+h2.sec-title { color:#f0f6fc; font-size:1.3em; margin:24px 20px 4px; border-left:4px solid #61dafb; padding-left:12px; }
+h3.sub-title { color:#58a6ff; font-size:1.05em; margin:16px 0 8px; }
+
+/* ── Concept Card ─────────────────────────────────── */
+.concept { background:#0d1117; border:1px solid #21262d; border-left:4px solid #61dafb; border-radius:8px; padding:16px; margin:12px 0; }
+.concept h3 { color:#61dafb; margin-bottom:8px; font-size:1.05em; }
+
+/* ── Footer ───────────────────────────────────────── */
+.footer { text-align:center; padding:30px; color:#484f58; font-size:0.9em; background:#0d1117; border-top:1px solid #21262d; margin-top:40px; }
+
+@media(max-width:700px){
+  .compare { grid-template-columns:1fr; }
+  .hero h1 { font-size:1.8em; }
+  .tabs .tab { padding:12px 14px; font-size:0.85em; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  HERO                                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="hero">
+  <h1>React <span>Complete Guide</span></h1>
+  <p>Step-by-Step Project + Interview Q&A | .NET Backend + React Frontend</p>
+  <br>
+  <span class="badge">React 19</span>
+  <span class="badge">Vite</span>
+  <span class="badge">React Router v7</span>
+  <span class="badge">Axios</span>
+  <span class="badge green">JWT Auth</span>
+  <span class="badge green">Context API</span>
+  <span class="badge orange">Gurumoorthy M</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  TABS                                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('setup')">⚙️ Setup</div>
+  <div class="tab" onclick="showTab('concepts')">🧠 Core Concepts</div>
+  <div class="tab" onclick="showTab('project')">🏗️ Project Code</div>
+  <div class="tab" onclick="showTab('hooks')">🪝 Hooks Deep Dive</div>
+  <div class="tab" onclick="showTab('interview')">🎯 Interview Q&amp;A</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!--  TAB 1 — SETUP                                                  -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div id="setup" class="section active">
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">React vs Angular — எது choose பண்றது?</div>
+        <div class="step-sub">Comparison + Your roadmap decision</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <table>
+        <tr><th>Feature</th><th>React</th><th>Angular</th></tr>
+        <tr><td>Type</td><td class="green-cell">Library (UI only)</td><td class="yellow-cell">Full Framework</td></tr>
+        <tr><td>Language</td><td class="green-cell">JS / JSX</td><td class="red-cell">TypeScript (mandatory)</td></tr>
+        <tr><td>Learning Curve</td><td class="green-cell">Easy</td><td class="red-cell">Hard</td></tr>
+        <tr><td>Interview Demand</td><td class="green-cell">Very High</td><td class="yellow-cell">Medium</td></tr>
+        <tr><td>Used by</td><td>Facebook, Netflix, Swiggy</td><td>Google, Enterprise</td></tr>
+        <tr><td>Bundle Size</td><td class="green-cell">Small (Tree-shaking)</td><td class="red-cell">Large</td></tr>
+        <tr><td>Your Roadmap</td><td class="green-cell">✅ Month 5 target</td><td class="red-cell">❌ Not in plan</td></tr>
+      </table>
+      <div class="tanglish">React choose பண்றோம் — interview demand high, learn பண்ண easy, உங்கள் roadmap-ல இருக்கு. Angular is overkill for your goal.</div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Project Create — Vite use பண்றோம்</div>
+        <div class="step-sub">CRA-ஐ விட Vite 10x faster — industry standard now</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="note">Vite = Modern build tool. create-react-app deprecated ஆகிட்டே இருக்கு. Vite use பண்றது correct.</div>
+      <div class="cmd-block">
+        <span class="cmd-comment">Node.js install பண்ணுங்க — https://nodejs.org (LTS version)</span>
+        <span class="cmd-line">node -v</span>
+        <span class="cmd-comment">React project create</span>
+        <span class="cmd-line">cd C:\Projects\DotNetWithAngular</span>
+        <span class="cmd-line">npm create vite@latest frontendwithreact</span>
+        <span class="cmd-comment">Prompt வரும்: Select framework → React, Select variant → JavaScript</span>
+        <span class="cmd-line">cd frontendwithreact</span>
+        <span class="cmd-line">npm install</span>
+        <span class="cmd-line">npm install axios react-router-dom react react-dom</span>
+        <span class="cmd-line">npm install -D @vitejs/plugin-react</span>
+        <span class="cmd-line">npm run dev</span>
+        <span class="cmd-comment">Opens: http://localhost:5173</span>
+      </div>
+      <div class="success">Browser-ல Vite logo தெரியும் — project ready!</div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Folder Structure</div>
+        <div class="step-sub">MVC pattern-ஓட compare பண்ணி புரிஞ்சுக்கோ</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="tree">
+<span class="folder">frontendwithreact/</span>
+├── <span class="file">index.html</span>           <span class="cmt2">← Single HTML (like _Layout.cshtml)</span>
+├── <span class="file">vite.config.js</span>       <span class="cmt2">← Build config</span>
+├── <span class="file">package.json</span>
+└── <span class="folder">src/</span>
+    ├── <span class="imp">main.jsx</span>           <span class="cmt2">← Entry point (like Program.cs)</span>
+    ├── <span class="imp">App.jsx</span>            <span class="cmt2">← Routes (like RouteConfig)</span>
+    ├── <span class="imp">index.css</span>          <span class="cmt2">← Global styles</span>
+    ├── <span class="folder">context/</span>
+    │   └── <span class="new">AuthContext.jsx</span>    <span class="cmt2">← Global state (like Session)</span>
+    ├── <span class="folder">services/</span>
+    │   ├── <span class="new">api.js</span>             <span class="cmt2">← Axios + JWT interceptor</span>
+    │   ├── <span class="new">authService.js</span>     <span class="cmt2">← Login/Logout API calls</span>
+    │   └── <span class="new">studentService.js</span>  <span class="cmt2">← Student CRUD calls</span>
+    ├── <span class="folder">components/</span>
+    │   ├── <span class="new">ProtectedRoute.jsx</span> <span class="cmt2">← [Authorize] attribute</span>
+    │   └── <span class="new">StudentCard.jsx</span>    <span class="cmt2">← Reusable card (Partial View)</span>
+    └── <span class="folder">pages/</span>
+        ├── <span class="new">LoginPage.jsx</span>      <span class="cmt2">← Login form</span>
+        ├── <span class="new">StudentList.jsx</span>    <span class="cmt2">← Index View</span>
+        └── <span class="new">StudentForm.jsx</span>    <span class="cmt2">← Create/Edit View</span>
+      </div>
+
+      <div class="compare">
+        <div class="cbox react">
+          <h4>React Structure</h4>
+          <div style="color:#adbac7;font-size:0.88em">
+            pages/ → Full pages (Controllers)<br>
+            components/ → Partial Views<br>
+            services/ → HttpClient layer<br>
+            context/ → Session/Global state
+          </div>
+        </div>
+        <div class="cbox angular">
+          <h4>C# MVC Equivalent</h4>
+          <div style="color:#adbac7;font-size:0.88em">
+            Controllers/ → Pages<br>
+            Views/Shared/ → Components<br>
+            Services/ → Service layer<br>
+            HttpContext.Session → Context
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Backend CORS Fix — React Allow பண்ண</div>
+        <div class="step-sub">Program.cs-ல localhost:5173 add பண்ணணும்</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="warn">CORS fix இல்லாம் React → API call → 403 error வரும்!</div>
+      <pre><span class="cmt">// C:\Projects\DotNetWithAngular\backend\Program.cs</span>
+builder.Services.AddCors(<span class="fn">options</span> =>
+{
+    options.AddPolicy(<span class="str">"AllowAngular"</span>, <span class="fn">policy</span> =>
+        policy.WithOrigins(
+            <span class="str">"http://localhost:4200"</span>, <span class="str">"https://localhost:4200"</span>,  <span class="cmt">// Angular</span>
+            <span class="str">"http://localhost:5173"</span>, <span class="str">"https://localhost:5173"</span>   <span class="cmt">// React (Vite)</span>
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials());
+});</pre>
+      <div class="success">இப்போ React-லிருந்து API calls work ஆகும்!</div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">Run பண்றது — 2 Terminals</div>
+        <div class="step-sub">Backend + Frontend same time run பண்ணணும்</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="compare">
+        <div class="cbox">
+          <h4 style="color:#61dafb">Terminal 1 — Backend (.NET API)</h4>
+          <div class="cmd-block" style="margin-top:8px">
+            <span class="cmd-line">cd C:\Projects\DotNetWithAngular\backend</span>
+            <span class="cmd-line">dotnet run</span>
+            <span class="cmd-comment">→ http://localhost:5260</span>
+            <span class="cmd-comment">→ Swagger: http://localhost:5260/swagger</span>
+          </div>
+        </div>
+        <div class="cbox">
+          <h4 style="color:#61dafb">Terminal 2 — React Frontend</h4>
+          <div class="cmd-block" style="margin-top:8px">
+            <span class="cmd-line">cd C:\Projects\DotNetWithAngular\frontendwithreact</span>
+            <span class="cmd-line">npm run dev</span>
+            <span class="cmd-comment">→ http://localhost:5173</span>
+          </div>
+        </div>
+      </div>
+      <table>
+        <tr><th>Username</th><th>Password</th><th>Role</th><th>Permissions</th></tr>
+        <tr><td>admin</td><td class="str" style="color:#a5d6ff">Admin@123</td><td class="green-cell">Admin</td><td>View + Add + Edit + Delete</td></tr>
+        <tr><td>student</td><td class="str" style="color:#a5d6ff">Student@123</td><td class="yellow-cell">Student</td><td>View only</td></tr>
+        <tr><td>guru</td><td class="str" style="color:#a5d6ff">Guru@123</td><td class="green-cell">Admin</td><td>View + Add + Edit + Delete</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /setup -->
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!--  TAB 2 — CORE CONCEPTS                                          -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div id="concepts" class="section">
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🧠</div>
+      <div>
+        <div class="step-title">JSX — JavaScript + HTML Mixed</div>
+        <div class="step-sub">Razor View போல, ஆனா JavaScript-ல</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">Razor View (.cshtml) → JSX (.jsx) | Both mix logic + UI. JSX → Babel → plain JS.</div>
+      <div class="compare">
+        <div class="cbox">
+          <h4 style="color:#dd0031">C# Razor (.cshtml)</h4>
+          <pre style="margin-top:8px"><span class="tag">@model</span> Student
+<span class="tag">&lt;h1&gt;</span>@Model.Name<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Age: @Model.Age<span class="tag">&lt;/p&gt;</span>
+<span class="tag">@if</span> (Model.IsAdmin) {
+  <span class="tag">&lt;button&gt;</span>Delete<span class="tag">&lt;/button&gt;</span>
+}</pre>
+        </div>
+        <div class="cbox react">
+          <h4>React JSX (.jsx)</h4>
+          <pre style="margin-top:8px"><span class="kw">function</span> <span class="cls">Student</span>({ student }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="jsx">&lt;h1&gt;</span>{student.name}<span class="jsx">&lt;/h1&gt;</span>
+      <span class="jsx">&lt;p&gt;</span>Age: {student.age}<span class="jsx">&lt;/p&gt;</span>
+      {student.isAdmin &amp;&amp; (
+        <span class="jsx">&lt;button&gt;</span>Delete<span class="jsx">&lt;/button&gt;</span>
+      )}
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+      <div class="tanglish">JSX-ல curly braces {} use பண்ணா JavaScript expression எழுதலாம் — @Model.Name போல. if statement-ஐ && or ternary-ஆ எழுதுவோம்.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🔵</div>
+      <div>
+        <div class="step-title">Component — Building Block</div>
+        <div class="step-sub">Partial View / User Control போல reusable piece</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">Component = C#-ல Partial View (@Html.Partial) or User Control. ஒரு function, UI return பண்ணும்.</div>
+      <pre><span class="cmt">// Simple Component — function that returns JSX</span>
+<span class="kw">function</span> <span class="cls">StudentCard</span>({ student, onDelete }) {  <span class="cmt">// Props = method parameters</span>
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"card"</span><span class="jsx">&gt;</span>
+      <span class="jsx">&lt;h3&gt;</span>{student.name}<span class="jsx">&lt;/h3&gt;</span>
+      <span class="jsx">&lt;button</span> <span class="attr">onClick</span>={() => onDelete(student.id)}<span class="jsx">&gt;</span>Delete<span class="jsx">&lt;/button&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cmt">// Use the component</span>
+<span class="kw">function</span> <span class="cls">StudentList</span>() {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="jsx">&lt;StudentCard</span> <span class="attr">student</span>={myStudent} <span class="attr">onDelete</span>={handleDelete} <span class="jsx">/&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</pre>
+      <div class="tanglish">Component = function + return JSX. Props = data pass பண்ற way. className use பண்ணுவோம் (class-ஐ இல்ல — JS reserved word).</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🟢</div>
+      <div>
+        <div class="step-title">Props vs State — Core Difference</div>
+        <div class="step-sub">Interview-ல 100% கேப்பாங்க</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="compare">
+        <div class="cbox">
+          <h4 style="color:#ffa657">Props (Properties)</h4>
+          <div style="color:#adbac7;font-size:0.88em;margin-bottom:8px">
+            • Parent → Child pass பண்றது<br>
+            • Read-only (immutable)<br>
+            • Like method parameters<br>
+            • Change ஆனா re-render இல்ல
+          </div>
+          <pre><span class="cmt">// Parent sends</span>
+<span class="jsx">&lt;Card</span> <span class="attr">name</span>=<span class="str">"Guru"</span> <span class="jsx">/&gt;</span>
+
+<span class="cmt">// Child receives</span>
+<span class="kw">function</span> <span class="cls">Card</span>({ name }) {
+  <span class="kw">return</span> <span class="jsx">&lt;h1&gt;</span>{name}<span class="jsx">&lt;/h1&gt;</span>;
+}</pre>
+        </div>
+        <div class="cbox">
+          <h4 style="color:#61dafb">State</h4>
+          <div style="color:#adbac7;font-size:0.88em;margin-bottom:8px">
+            • Component's own data<br>
+            • Mutable (can change)<br>
+            • Like private fields<br>
+            • Change → re-render triggers
+          </div>
+          <pre><span class="kw">function</span> <span class="cls">Counter</span>() {
+  <span class="kw">const</span> [count, setCount]
+    = <span class="hook">useState</span>(<span class="num">0</span>);
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;button</span>
+      <span class="attr">onClick</span>={() => setCount(count+<span class="num">1</span>)}<span class="jsx">&gt;</span>
+      {count}
+    <span class="jsx">&lt;/button&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+      <div class="tanglish">Props = parent-லிருந்து receive பண்றோம் (read-only). State = component-ஓட own data (change பண்ணலாம், UI update ஆகும்). Simple rule: "யாரோட data?" — own-ஆ இருந்தா State, parent-கிட்டிருந்து வந்தா Props.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🟡</div>
+      <div>
+        <div class="step-title">Virtual DOM — React Speed Secret</div>
+        <div class="step-sub">Interview must-know concept</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>How it works:</h3>
+        <div style="color:#adbac7;font-size:0.92em">
+          <strong style="color:#61dafb">1. Virtual DOM (Memory copy)</strong> → React memory-ல ஒரு lightweight DOM copy வச்சிருக்கும்<br>
+          <strong style="color:#61dafb">2. State change →</strong> New Virtual DOM create பண்ணும்<br>
+          <strong style="color:#61dafb">3. Diffing →</strong> Old vs New Virtual DOM compare பண்ணும்<br>
+          <strong style="color:#61dafb">4. Reconciliation →</strong> Changed parts மட்டும் Real DOM update பண்ணும்<br>
+          <strong style="color:#3fb950">Result →</strong> Minimum DOM operations → Fast UI!
+        </div>
+      </div>
+      <div class="tanglish">Direct DOM manipulation slow. React memory-ல Virtual copy வச்சிருக்கும். Change ஆனா, old vs new compare (diff) பண்ணி, மாறினது மட்டும் update பண்ணும். கடையிலே முழு shelf-ஐ change பண்றது இல்ல, ஒரு item மட்டும் replace பண்றோம்.</div>
+    </div>
+  </div>
+
+</div><!-- /concepts -->
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!--  TAB 3 — PROJECT CODE                                           -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div id="project" class="section">
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">📁</div>
+      <div>
+        <div class="step-title">api.js — Central Axios Instance</div>
+        <div class="step-sub">JWT auto-attach + 401 auto-refresh</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">HttpClient with BaseAddress + DelegatingHandler (auto JWT header) in C#</div>
+      <pre><span class="cmt">// src/services/api.js</span>
+<span class="kw">import</span> axios <span class="kw">from</span> <span class="str">'axios'</span>;
+
+<span class="kw">const</span> api = axios.create({
+  baseURL: <span class="str">'http://localhost:5260/api/v1'</span>,
+  headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+});
+
+<span class="cmt">// Request interceptor — every API call-la JWT auto add பண்ணும்</span>
+api.interceptors.request.use(<span class="fn">config</span> => {
+  <span class="kw">const</span> token = localStorage.getItem(<span class="str">'accessToken'</span>);
+  <span class="kw">if</span> (token) config.headers.Authorization = <span class="str">`Bearer ${token}`</span>;
+  <span class="kw">return</span> config;
+});
+
+<span class="cmt">// Response interceptor — 401 வந்தா auto refresh try பண்ணும்</span>
+api.interceptors.response.use(
+  response => response,
+  <span class="kw">async</span> error => {
+    <span class="kw">const</span> original = error.config;
+    <span class="kw">if</span> (error.response?.status === <span class="num">401</span> &amp;&amp; !original._retry) {
+      original._retry = <span class="kw">true</span>;
+      <span class="kw">try</span> {
+        <span class="kw">const</span> res = <span class="kw">await</span> axios.post(<span class="str">'/auth/refresh'</span>, {
+          accessToken:  localStorage.getItem(<span class="str">'accessToken'</span>),
+          refreshToken: localStorage.getItem(<span class="str">'refreshToken'</span>),
+        });
+        localStorage.setItem(<span class="str">'accessToken'</span>, res.data.data.token);
+        original.headers.Authorization = <span class="str">`Bearer ${res.data.data.token}`</span>;
+        <span class="kw">return</span> api(original); <span class="cmt">// Retry original request</span>
+      } <span class="kw">catch</span> {
+        localStorage.clear();
+        window.location.href = <span class="str">'/login'</span>;
+      }
+    }
+    <span class="kw">return</span> Promise.reject(error);
+  }
+);
+
+<span class="kw">export default</span> api;</pre>
+      <div class="tanglish">interceptors = C#-ல Middleware போல. Request interceptor: API call போற முன்னே JWT add. Response interceptor: 401 வந்தா, refresh token use பண்ணி new token get பண்ணி, original request retry. User-கு logout தெரியாமலே auto handle ஆகும்!</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">📁</div>
+      <div>
+        <div class="step-title">AuthContext.jsx — Global Auth State</div>
+        <div class="step-sub">Prop drilling avoid — any component-ல user access பண்ணலாம்</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">C# HttpContext.Session / ClaimsPrincipal — global user info store</div>
+      <pre><span class="cmt">// src/context/AuthContext.jsx</span>
+<span class="kw">import</span> { createContext, useContext, useState, useCallback } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { authService } <span class="kw">from</span> <span class="str">'../services/authService'</span>;
+
+<span class="kw">const</span> AuthContext = createContext(<span class="kw">null</span>);
+
+<span class="kw">export function</span> <span class="cls">AuthProvider</span>({ children }) {
+  <span class="cmt">// Page refresh-லயும் login maintain — localStorage படிக்கிறோம்</span>
+  <span class="kw">const</span> [user, setUser] = <span class="hook">useState</span>(() => {
+    <span class="kw">const</span> token    = localStorage.getItem(<span class="str">'accessToken'</span>);
+    <span class="kw">const</span> username = localStorage.getItem(<span class="str">'username'</span>);
+    <span class="kw">const</span> role     = localStorage.getItem(<span class="str">'role'</span>);
+    <span class="kw">return</span> token ? { username, role, token } : <span class="kw">null</span>;
+  });
+
+  <span class="kw">const</span> login = <span class="hook">useCallback</span>(<span class="kw">async</span> (username, password) => {
+    <span class="kw">const</span> res = <span class="kw">await</span> authService.login(username, password);
+    <span class="kw">const</span> { token, refreshToken, username: uname, role } = res.data.data;
+    localStorage.setItem(<span class="str">'accessToken'</span>,  token);
+    localStorage.setItem(<span class="str">'refreshToken'</span>, refreshToken);
+    localStorage.setItem(<span class="str">'username'</span>,     uname);
+    localStorage.setItem(<span class="str">'role'</span>,          role);
+    setUser({ username: uname, role, token });
+  }, []);
+
+  <span class="kw">const</span> logout = <span class="hook">useCallback</span>(<span class="kw">async</span> () => {
+    <span class="kw">try</span> {
+      <span class="kw">await</span> authService.revoke(localStorage.getItem(<span class="str">'refreshToken'</span>));
+    } <span class="kw">finally</span> {
+      localStorage.clear();
+      setUser(<span class="kw">null</span>);
+    }
+  }, []);
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;AuthContext.Provider</span> <span class="attr">value</span>={{ user, login, logout, isAdmin: user?.role === <span class="str">'Admin'</span> }}<span class="jsx">&gt;</span>
+      {children}
+    <span class="jsx">&lt;/AuthContext.Provider&gt;</span>
+  );
+}
+
+<span class="cmt">// Custom hook — any component-ல useAuth() call பண்ணி user get பண்ணலாம்</span>
+<span class="kw">export function</span> <span class="fn">useAuth</span>() {
+  <span class="kw">return</span> <span class="hook">useContext</span>(AuthContext);
+}</pre>
+      <div class="tanglish">AuthProvider = App-ஐ wrap பண்ணுவோம். எந்த child component-லயும் useAuth() call பண்ணி { user, login, logout, isAdmin } get பண்ணலாம். Prop drilling வேண்டாம் — global access!</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">📁</div>
+      <div>
+        <div class="step-title">StudentList.jsx — Main Page</div>
+        <div class="step-sub">useEffect + useState + API call + Search filter</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <pre><span class="cmt">// src/pages/StudentList.jsx</span>
+<span class="kw">import</span> { useState, useEffect, useCallback } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { studentService } <span class="kw">from</span> <span class="str">'../services/studentService'</span>;
+<span class="kw">import</span> { useAuth } <span class="kw">from</span> <span class="str">'../context/AuthContext'</span>;
+<span class="kw">import</span> StudentCard <span class="kw">from</span> <span class="str">'../components/StudentCard'</span>;
+
+<span class="kw">export default function</span> <span class="cls">StudentList</span>() {
+  <span class="kw">const</span> { user, logout, isAdmin } = <span class="hook">useAuth</span>();
+  <span class="kw">const</span> [students, setStudents] = <span class="hook">useState</span>([]);
+  <span class="kw">const</span> [loading,  setLoading]  = <span class="hook">useState</span>(<span class="kw">true</span>);
+  <span class="kw">const</span> [error,    setError]    = <span class="hook">useState</span>(<span class="str">''</span>);
+  <span class="kw">const</span> [search,   setSearch]   = <span class="hook">useState</span>(<span class="str">''</span>);
+
+  <span class="cmt">// useCallback = function memoize பண்ணும் (unnecessary re-create avoid)</span>
+  <span class="kw">const</span> fetchStudents = <span class="hook">useCallback</span>(<span class="kw">async</span> () => {
+    <span class="kw">try</span> {
+      setLoading(<span class="kw">true</span>);
+      <span class="kw">const</span> res = <span class="kw">await</span> studentService.getAll();
+      setStudents(res.data.data); <span class="cmt">// ApiResponse&lt;List&lt;Student&gt;&gt; → .data.data</span>
+    } <span class="kw">catch</span> {
+      setError(<span class="str">'API error — backend running-ஆ check பண்ணுங்க'</span>);
+    } <span class="kw">finally</span> {
+      setLoading(<span class="kw">false</span>);
+    }
+  }, []);
+
+  <span class="cmt">// useEffect = Page_Load / OnGet() — component mount ஆகும்போது run</span>
+  <span class="hook">useEffect</span>(() => { fetchStudents(); }, [fetchStudents]);
+
+  <span class="kw">const</span> handleDelete = <span class="kw">async</span> (id) => {
+    <span class="kw">if</span> (!window.confirm(<span class="str">'Delete பண்ணணுமா?'</span>)) <span class="kw">return</span>;
+    <span class="kw">await</span> studentService.delete(id);
+    <span class="cmt">// Local state update — API re-call வேண்டாம் (optimistic update)</span>
+    setStudents(prev => prev.filter(s => s.id !== id));
+  };
+
+  <span class="cmt">// LINQ .Where() equivalent — search filter</span>
+  <span class="kw">const</span> filtered = students.filter(s =>
+    s.name.toLowerCase().includes(search.toLowerCase()) ||
+    s.course.toLowerCase().includes(search.toLowerCase())
+  );
+
+  <span class="kw">if</span> (loading) <span class="kw">return</span> <span class="jsx">&lt;div&gt;</span>Loading...<span class="jsx">&lt;/div&gt;</span>;
+  <span class="kw">if</span> (error)   <span class="kw">return</span> <span class="jsx">&lt;div&gt;</span>{error}<span class="jsx">&lt;/div&gt;</span>;
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      {filtered.map(student => (
+        <span class="jsx">&lt;StudentCard</span> <span class="attr">key</span>={student.id} <span class="attr">student</span>={student} <span class="attr">onDelete</span>={handleDelete} <span class="jsx">/&gt;</span>
+      ))}
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</pre>
+      <div class="tanglish">key={student.id} mandatory — React-கு list items track பண்ண. இல்லன்னா warning வரும், performance கெடும். C#-ல Dictionary-ல unique key போல.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">📁</div>
+      <div>
+        <div class="step-title">App.jsx — Routing Setup</div>
+        <div class="step-sub">React Router v7 + Protected Routes</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">RouteConfig.cs / Program.cs app.MapControllerRoute()</div>
+      <pre><span class="cmt">// src/App.jsx</span>
+<span class="kw">import</span> { BrowserRouter, Routes, Route, Navigate } <span class="kw">from</span> <span class="str">'react-router-dom'</span>;
+<span class="kw">import</span> { AuthProvider }    <span class="kw">from</span> <span class="str">'./context/AuthContext'</span>;
+<span class="kw">import</span> ProtectedRoute     <span class="kw">from</span> <span class="str">'./components/ProtectedRoute'</span>;
+<span class="kw">import</span> LoginPage          <span class="kw">from</span> <span class="str">'./pages/LoginPage'</span>;
+<span class="kw">import</span> StudentList        <span class="kw">from</span> <span class="str">'./pages/StudentList'</span>;
+<span class="kw">import</span> StudentForm        <span class="kw">from</span> <span class="str">'./pages/StudentForm'</span>;
+
+<span class="kw">export default function</span> <span class="cls">App</span>() {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;AuthProvider&gt;</span>        <span class="cmt">// Global auth state — wrap everything</span>
+      <span class="jsx">&lt;BrowserRouter&gt;</span>
+        <span class="jsx">&lt;Routes&gt;</span>
+          <span class="cmt">// Public — no auth needed</span>
+          <span class="jsx">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/login"</span> <span class="attr">element</span>={<span class="jsx">&lt;LoginPage /&gt;</span>} <span class="jsx">/&gt;</span>
+
+          <span class="cmt">// Protected — any logged-in user</span>
+          <span class="jsx">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/students"</span> <span class="attr">element</span>={
+            <span class="jsx">&lt;ProtectedRoute&gt;&lt;StudentList /&gt;&lt;/ProtectedRoute&gt;</span>
+          } <span class="jsx">/&gt;</span>
+
+          <span class="cmt">// Admin only routes</span>
+          <span class="jsx">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/students/add"</span> <span class="attr">element</span>={
+            <span class="jsx">&lt;ProtectedRoute</span> <span class="attr">adminOnly</span><span class="jsx">&gt;&lt;StudentForm /&gt;&lt;/ProtectedRoute&gt;</span>
+          } <span class="jsx">/&gt;</span>
+          <span class="jsx">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/students/edit/:id"</span> <span class="attr">element</span>={
+            <span class="jsx">&lt;ProtectedRoute</span> <span class="attr">adminOnly</span><span class="jsx">&gt;&lt;StudentForm /&gt;&lt;/ProtectedRoute&gt;</span>
+          } <span class="jsx">/&gt;</span>
+
+          <span class="cmt">// Default redirect</span>
+          <span class="jsx">&lt;Route</span> <span class="attr">path</span>=<span class="str">"*"</span> <span class="attr">element</span>={<span class="jsx">&lt;Navigate</span> <span class="attr">to</span>=<span class="str">"/students"</span> <span class="jsx">/&gt;</span>} <span class="jsx">/&gt;</span>
+        <span class="jsx">&lt;/Routes&gt;</span>
+      <span class="jsx">&lt;/BrowserRouter&gt;</span>
+    <span class="jsx">&lt;/AuthProvider&gt;</span>
+  );
+}</pre>
+    </div>
+  </div>
+
+</div><!-- /project -->
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!--  TAB 4 — HOOKS DEEP DIVE                                        -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div id="hooks" class="section">
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🪝</div>
+      <div>
+        <div class="step-title">useState — State Management</div>
+        <div class="step-sub">Component-ஓட memory. Change → UI re-render</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">private fields in C#. ஆனா set பண்ணும்போது UI automatic update ஆகும்.</div>
+      <pre><span class="kw">const</span> [value, setValue] = <span class="hook">useState</span>(initialValue);
+<span class="cmt">//     ↑ read   ↑ update       ↑ default</span>
+
+<span class="cmt">// Examples:</span>
+<span class="kw">const</span> [count,    setCount]    = <span class="hook">useState</span>(<span class="num">0</span>);
+<span class="kw">const</span> [name,     setName]     = <span class="hook">useState</span>(<span class="str">''</span>);
+<span class="kw">const</span> [loading,  setLoading]  = <span class="hook">useState</span>(<span class="kw">true</span>);
+<span class="kw">const</span> [students, setStudents] = <span class="hook">useState</span>([]);
+<span class="kw">const</span> [user,     setUser]     = <span class="hook">useState</span>(<span class="kw">null</span>);
+
+<span class="cmt">// Object state update — spread operator use பண்ணணும்</span>
+<span class="kw">const</span> [form, setForm] = <span class="hook">useState</span>({ name: <span class="str">''</span>, email: <span class="str">''</span> });
+setForm(prev => ({ ...prev, name: <span class="str">'Guru'</span> })); <span class="cmt">// Only name update, email அப்படியே</span>
+
+<span class="cmt">// ❌ Wrong — direct mutation (re-render ஆகாது!)</span>
+students.push(newStudent);     <span class="cmt">// WRONG</span>
+<span class="cmt">// ✅ Correct — new array create பண்ணணும்</span>
+setStudents([...students, newStudent]); <span class="cmt">// CORRECT</span></pre>
+      <div class="warn">State directly modify பண்றது (push/splice) works இல்ல! Always setXxx() use பண்ணணும். React immutability expect பண்ணும்.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🪝</div>
+      <div>
+        <div class="step-title">useEffect — Side Effects</div>
+        <div class="step-sub">API calls, subscriptions, timers — component lifecycle</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="analogy">Page_Load / OnGet() / OnInitializedAsync() in Blazor</div>
+      <pre><span class="cmt">// Syntax</span>
+<span class="hook">useEffect</span>(() => {
+  <span class="cmt">// Side effect code</span>
+  <span class="kw">return</span> () => {
+    <span class="cmt">// Cleanup (optional) — component unmount ஆகும்போது</span>
+  };
+}, [dependency1, dependency2]); <span class="cmt">// Dependency array</span>
+
+<span class="cmt">// ── Pattern 1: On mount once ([] = empty dep) ──</span>
+<span class="hook">useEffect</span>(() => {
+  fetchStudents(); <span class="cmt">// Page load-லை ஒரே ஒரு தடவை</span>
+}, []);
+
+<span class="cmt">// ── Pattern 2: When dependency changes ──</span>
+<span class="hook">useEffect</span>(() => {
+  fetchById(id); <span class="cmt">// id change ஆகும்போது run</span>
+}, [id]);
+
+<span class="cmt">// ── Pattern 3: Cleanup (Timer, WebSocket) ──</span>
+<span class="hook">useEffect</span>(() => {
+  <span class="kw">const</span> timer = setInterval(fetchLiveData, <span class="num">5000</span>);
+  <span class="kw">return</span> () => clearInterval(timer); <span class="cmt">// Cleanup on unmount</span>
+}, []);
+
+<span class="cmt">// ── Pattern 4: No dependency = every render (usually wrong!) ──</span>
+<span class="hook">useEffect</span>(() => {
+  console.log(<span class="str">'Every render'</span>); <span class="cmt">// ⚠️ Rarely needed</span>
+});</pre>
+      <div class="tanglish">Dependency array [] = ஒரே ஒரு தடவை (mount). [id] = id change ஆகும்போது. Empty = every render. Cleanup function = IDisposable.Dispose() போல.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🪝</div>
+      <div>
+        <div class="step-title">useContext — Global State Access</div>
+        <div class="step-sub">Prop drilling problem solve பண்ண</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <pre><span class="cmt">// Problem: Prop Drilling — 3 levels down pass பண்றது</span>
+<span class="jsx">&lt;App</span> <span class="attr">user</span>={user}<span class="jsx">&gt;</span>
+  <span class="jsx">&lt;Layout</span> <span class="attr">user</span>={user}<span class="jsx">&gt;</span>       <span class="cmt">// Layout doesn't need it, just passes</span>
+    <span class="jsx">&lt;Navbar</span> <span class="attr">user</span>={user}<span class="jsx">&gt;</span>     <span class="cmt">// Finally uses it</span>
+    <span class="jsx">&lt;/Navbar&gt;&lt;/Layout&gt;&lt;/App&gt;</span>
+
+<span class="cmt">// Solution: Context — any level direct access</span>
+<span class="kw">const</span> AuthContext = createContext(<span class="kw">null</span>);
+
+<span class="cmt">// Provide (App level)</span>
+<span class="jsx">&lt;AuthContext.Provider</span> <span class="attr">value</span>={{ user, login, logout }}<span class="jsx">&gt;</span>
+  <span class="jsx">&lt;App /&gt;</span>
+<span class="jsx">&lt;/AuthContext.Provider&gt;</span>
+
+<span class="cmt">// Consume (any child — no prop drilling!)</span>
+<span class="kw">function</span> <span class="cls">Navbar</span>() {
+  <span class="kw">const</span> { user } = <span class="hook">useContext</span>(AuthContext);
+  <span class="kw">return</span> <span class="jsx">&lt;span&gt;</span>Welcome, {user.username}<span class="jsx">&lt;/span&gt;</span>;
+}</pre>
+      <div class="tanglish">Prop drilling = ஒரு data-ஐ A → B → C → D pass பண்றது, B/C use பண்றதில்லன்னாலும். Context-ல A-ல provide பண்ணி D-ல directly consume பண்ணலாம். Like global variable, ஆனா React way.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🪝</div>
+      <div>
+        <div class="step-title">useMemo &amp; useCallback — Performance</div>
+        <div class="step-sub">Unnecessary re-computation prevent பண்ண</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="compare">
+        <div class="cbox">
+          <h4 style="color:#d2a8ff">useMemo — Value cache</h4>
+          <pre style="margin-top:8px"><span class="cmt">// Expensive calculation cache</span>
+<span class="cmt">// C# Lazy&lt;T&gt; போல</span>
+<span class="kw">const</span> total = <span class="hook">useMemo</span>(() =>
+  students.reduce(
+    (sum, s) => sum + s.fees, <span class="num">0</span>
+  ),
+  [students] <span class="cmt">// Only recalculate when students changes</span>
+);
+
+<span class="cmt">// Search filter cache</span>
+<span class="kw">const</span> filtered = <span class="hook">useMemo</span>(() =>
+  students.filter(s =>
+    s.name.includes(search)
+  ),
+  [students, search]
+);</pre>
+        </div>
+        <div class="cbox">
+          <h4 style="color:#d2a8ff">useCallback — Function cache</h4>
+          <pre style="margin-top:8px"><span class="cmt">// Function re-create prevent</span>
+<span class="cmt">// Child re-render avoid பண்ண</span>
+<span class="kw">const</span> handleDelete = <span class="hook">useCallback</span>(
+  <span class="kw">async</span> (id) => {
+    <span class="kw">await</span> studentService.delete(id);
+    setStudents(prev =>
+      prev.filter(s => s.id !== id)
+    );
+  },
+  [] <span class="cmt">// No dependencies = create once</span>
+);
+
+<span class="cmt">// Without useCallback = new function</span>
+<span class="cmt">// every render = child re-renders</span></pre>
+        </div>
+      </div>
+      <div class="tanglish">useMemo = value cache (calculation). useCallback = function cache. Both dependency array use பண்ணும் — அது change ஆனா மட்டும் recalculate/recreate. Interview: "Performance optimize பண்ண useMemo/useCallback use பண்றேன்" சொல்லுங்க.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">🪝</div>
+      <div>
+        <div class="step-title">useRef — DOM Access + Persist Value</div>
+        <div class="step-sub">Re-render trigger பண்றது இல்ல</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <pre><span class="cmt">// Use 1: DOM element access</span>
+<span class="kw">const</span> inputRef = <span class="hook">useRef</span>(<span class="kw">null</span>);
+<span class="jsx">&lt;input</span> <span class="attr">ref</span>={inputRef} <span class="jsx">/&gt;</span>
+inputRef.current.focus(); <span class="cmt">// Direct DOM manipulation</span>
+
+<span class="cmt">// Use 2: Value without re-render (timer, previous value)</span>
+<span class="kw">const</span> timerRef = <span class="hook">useRef</span>(<span class="kw">null</span>);
+<span class="hook">useEffect</span>(() => {
+  timerRef.current = setInterval(fetchData, <span class="num">5000</span>);
+  <span class="kw">return</span> () => clearInterval(timerRef.current);
+}, []);
+
+<span class="cmt">// useState vs useRef</span>
+<span class="cmt">// useState  → value change = UI re-render</span>
+<span class="cmt">// useRef    → value change = NO re-render (just stores value)</span></pre>
+      <div class="tanglish">useRef = C#-ல private field, ஆனா React rendering affect பண்றது இல்ல. DOM-ஐ directly access பண்ண (focus, scroll) or timer id store பண்ண use பண்றோம்.</div>
+    </div>
+  </div>
+
+</div><!-- /hooks -->
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!--  TAB 5 — INTERVIEW Q&A                                          -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div id="interview" class="section">
+
+  <h2 class="sec-title">Basic Level <span class="level l1">Fresher / 1yr</span></h2>
+
+  <div style="margin:0 20px">
+
+    <div class="qa-card">
+      <div class="qa-q">What is React? Why use it over plain JavaScript?</div>
+      <div class="qa-a">
+        React is a <strong>UI library</strong> by Facebook for building component-based UIs. Benefits:
+        Virtual DOM for performance, reusable components, one-way data flow, large ecosystem.
+        Plain JS-ல DOM manipulation manual-ஆ பண்ணணும் — complex-ஆ ஆகும்போது maintain பண்ண கஷ்டம்.
+      </div>
+      <div class="qa-t">React = UI library, not full framework. Virtual DOM use பண்றதால் fast. Components-ஆ split பண்றதால் reuse பண்ணலாம்.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What is JSX? Is it mandatory in React?</div>
+      <div class="qa-a">
+        JSX is a <strong>syntax extension</strong> for JavaScript that looks like HTML. Babel compiles it to
+        <code>React.createElement()</code> calls. Not mandatory — you can write React.createElement() directly,
+        but JSX makes it readable.
+      </div>
+      <div class="qa-t">JSX = JavaScript + HTML mixed. Browser இதை directly understand பண்றதில்ல — Babel compile பண்ணி pure JS ஆக்கும். Razor View போல imagine பண்ணுங்க.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Props vs State — difference?</div>
+      <div class="qa-a">
+        <strong>Props:</strong> Data passed from parent to child. Read-only (immutable). Like method parameters.<br>
+        <strong>State:</strong> Component's own data. Mutable via setState/useState. Change triggers re-render.
+        <br>Simple rule: "Who owns the data?" — if external = Props, if internal = State.
+      </div>
+      <div class="qa-t">Props = parent கொடுத்தது (touch பண்றது இல்ல). State = component-ஓட own data (change பண்ணலாம், UI update ஆகும்).</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What is Virtual DOM? How does it improve performance?</div>
+      <div class="qa-a">
+        Virtual DOM is an <strong>in-memory lightweight copy</strong> of the real DOM. When state changes:
+        (1) New Virtual DOM created, (2) Old vs New diffed (reconciliation),
+        (3) Only changed nodes updated in real DOM. This avoids expensive full DOM re-renders.
+      </div>
+      <div class="qa-t">React memory-ல copy வச்சிருக்கும். Change ஆனா, diff பார்க்கும், மாறினது மட்டும் update. Full page refresh இல்ல — surgical update. Speed increase இதுதான்.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What is the purpose of the "key" prop in lists?</div>
+      <div class="qa-a">
+        <code>key</code> helps React identify which items changed, added, or removed in a list.
+        Must be <strong>unique among siblings</strong>. Using index as key is a bad practice when list items can reorder.
+        Use unique IDs from your data.
+      </div>
+      <div class="qa-t">key இல்லாம் list render பண்ணா warning வரும். Performance கெடும். student.id போல unique value use பண்ணுங்க, array index-ஐ use பண்றதை தவிருங்க.</div>
+    </div>
+
+  </div>
+
+  <h2 class="sec-title">Intermediate Level <span class="level l2">2–3 yrs</span></h2>
+
+  <div style="margin:0 20px">
+
+    <div class="qa-card">
+      <div class="qa-q">Explain useEffect with examples — when does it run?</div>
+      <div class="qa-a">
+        <strong>useEffect(fn, [])</strong> — Runs once on mount (like OnInitialized)<br>
+        <strong>useEffect(fn, [id])</strong> — Runs when <code>id</code> changes<br>
+        <strong>useEffect(fn)</strong> — Runs after every render (rarely needed)<br>
+        Return function = cleanup (runs on unmount or before next effect)
+      </div>
+      <div class="qa-t">[] = mount-ல ஒரே ஒரு தடவை. [dep] = dep change ஆகும்போது. cleanup function = component போகும்போது (timer clear, subscription unsubscribe).</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What is Context API? When to use it vs Props?</div>
+      <div class="qa-a">
+        Context API provides <strong>global state</strong> accessible by any component without prop drilling.
+        Use Context for: auth state, theme, language, user preferences.<br>
+        Don't overuse — frequent updates in Context cause all consumers to re-render.
+        For complex state, consider Zustand or Redux.
+      </div>
+      <div class="qa-t">Prop drilling = A → B → C → D pass பண்றது B/C don't need. Context-ல A provide, D consume directly. Auth, theme, language போன்ற global things-க்கு use பண்றோம்.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Controlled vs Uncontrolled components?</div>
+      <div class="qa-a">
+        <strong>Controlled:</strong> Form data React state-ல manage பண்றோம். <code>value={state}</code> + <code>onChange={handler}</code>.
+        React is "single source of truth".<br>
+        <strong>Uncontrolled:</strong> DOM itself manages data. <code>useRef</code> use பண்ணி read பண்றோம். Less React-like.
+      </div>
+      <div class="qa-t">Production-ல controlled components use பண்றோம். value= state-லிருந்து வரும், onChange= state update பண்ணும். "Single source of truth" — interview answer-ல சொல்லுங்க.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">How does JWT authentication work in React?</div>
+      <div class="qa-a">
+        1. Login → POST credentials → API returns access token + refresh token<br>
+        2. Store tokens in localStorage (or httpOnly cookie for security)<br>
+        3. Every API request → add <code>Authorization: Bearer {token}</code> via axios interceptor<br>
+        4. Token expires → interceptor catches 401 → auto-refresh using refresh token<br>
+        5. Logout → revoke refresh token → clear localStorage
+      </div>
+      <div class="qa-t">Axios interceptor use பண்றோம் — manually header add பண்ணது இல்ல. 401 வந்தா auto refresh. உங்கள் project-லேயே இந்த pattern implement பண்ணோம்!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">useMemo vs useCallback — difference?</div>
+      <div class="qa-a">
+        <strong>useMemo:</strong> Memoizes a <em>computed value</em>. Returns the cached result.
+        Use for expensive calculations (filtering, sorting large arrays).<br>
+        <strong>useCallback:</strong> Memoizes a <em>function reference</em>. Returns the cached function.
+        Use to prevent child component re-renders when passing callbacks as props.
+      </div>
+      <div class="qa-t">useMemo = value cache (sum, filter result). useCallback = function cache (event handlers). Both dependency array use பண்ணும். Premature optimization வேண்டாம் — bottleneck இருந்தா மட்டும் use பண்ணுங்க.</div>
+    </div>
+
+  </div>
+
+  <h2 class="sec-title">Advanced Level <span class="level l3">3.5+ yrs / Senior</span></h2>
+
+  <div style="margin:0 20px">
+
+    <div class="qa-card">
+      <div class="qa-q">What is React's Reconciliation algorithm?</div>
+      <div class="qa-a">
+        React's reconciliation (Fiber algorithm) determines the <strong>minimum DOM updates</strong> needed.
+        Rules: (1) Different element types → destroy and rebuild tree,
+        (2) Same type → update attributes, (3) Lists → use keys to match elements.
+        React 18 uses <strong>concurrent rendering</strong> — can interrupt, pause, resume rendering.
+      </div>
+      <div class="qa-t">Fiber = React 16+ reconciler. Work units-ஆ split பண்ணி, priority-based render பண்ணும். High priority (user input) → low priority (background updates) interrupt பண்ணலாம். Smooth UI இதனால்.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Explain React's rendering optimization strategies</div>
+      <div class="qa-a">
+        <strong>1. React.memo</strong> — Prevent functional component re-render if props unchanged<br>
+        <strong>2. useMemo</strong> — Cache expensive computed values<br>
+        <strong>3. useCallback</strong> — Stable function references for child components<br>
+        <strong>4. Code Splitting</strong> — React.lazy + Suspense for route-level splitting<br>
+        <strong>5. Virtualization</strong> — react-window for rendering only visible list items<br>
+        <strong>6. Key prop</strong> — Correct keys prevent unnecessary unmount/remount
+      </div>
+      <div class="qa-t">Interview-ல கேட்டா 3–4 strategies சொல்லுங்க. React.memo + useCallback combo most common interview answer. "Profiler tool use பண்ணி bottleneck identify பண்றேன்" சொல்லுங்க.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Custom Hook — what is it and when to create one?</div>
+      <div class="qa-a">
+        A custom hook is a <strong>function starting with "use"</strong> that reuses stateful logic between components.
+        Extracts useState + useEffect logic into a reusable function — like a service layer for hooks.
+      </div>
+<pre style="margin:10px 18px;font-size:0.82em"><span class="cmt">// Custom hook — API fetch logic reuse</span>
+<span class="kw">function</span> <span class="fn">useStudents</span>() {
+  <span class="kw">const</span> [students, setStudents] = <span class="hook">useState</span>([]);
+  <span class="kw">const</span> [loading,  setLoading]  = <span class="hook">useState</span>(<span class="kw">true</span>);
+
+  <span class="hook">useEffect</span>(() => {
+    studentService.getAll().then(res => {
+      setStudents(res.data.data);
+      setLoading(<span class="kw">false</span>);
+    });
+  }, []);
+
+  <span class="kw">return</span> { students, loading };
+}
+
+<span class="cmt">// Use in any component</span>
+<span class="kw">function</span> <span class="cls">StudentList</span>() {
+  <span class="kw">const</span> { students, loading } = <span class="fn">useStudents</span>();
+}</pre>
+      <div class="qa-t">Custom hook = logic reuse. Name "use" la start பண்ணணும். Multiple components-ல same API call + loading state logic இருந்தா, custom hook-ல extract பண்ணலாம். DRY principle.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">React 18 — Concurrent Features explain பண்ணுங்க</div>
+      <div class="qa-a">
+        <strong>Concurrent Mode:</strong> React can pause, interrupt, resume rendering — no blocking.<br>
+        <strong>useTransition:</strong> Mark non-urgent state updates (search filter, tab switch) — keeps UI responsive.<br>
+        <strong>useDeferredValue:</strong> Defer a value update until urgent work is done.<br>
+        <strong>Automatic Batching:</strong> Multiple setState calls batched into one render (even in async).<br>
+        <strong>Suspense for Data:</strong> Show fallback while async data loads.
+      </div>
+      <div class="qa-t">React 18 = React-ஓட biggest update. Concurrent rendering = urgent work (typing) + non-urgent work (filter results) separate பண்றது. UI never freezes. useTransition use பண்ணா search input lag போகும்.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">How do you handle state in large React apps?</div>
+      <div class="qa-a">
+        <strong>Local state:</strong> useState — component-specific UI state<br>
+        <strong>Shared state:</strong> Context API — small to medium apps, infrequent updates<br>
+        <strong>Server state:</strong> React Query / TanStack Query — API data, caching, refetching<br>
+        <strong>Global state:</strong> Zustand / Redux Toolkit — complex client state<br>
+        Rule: Start with useState → Context → React Query → Zustand (escalate as needed)
+      </div>
+      <div class="qa-t">Correct answer: "Server state (API data) = React Query use பண்றேன் — caching, background refetch automatic. Client state = Zustand simple-ஆ இருக்கு, Redux verbosity வேண்டாம்". Interview-ல இந்த hierarchy சொல்லுங்க.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Code Splitting and Lazy Loading in React?</div>
+      <div class="qa-a">
+        <code>React.lazy()</code> + <code>Suspense</code> — load component only when needed (route-level splitting).
+        Reduces initial bundle size. Webpack/Vite automatically splits at lazy boundaries.
+      </div>
+<pre style="margin:10px 18px;font-size:0.82em"><span class="cmt">// Without lazy — all JS upfront load ஆகும்</span>
+<span class="kw">import</span> StudentList <span class="kw">from</span> <span class="str">'./pages/StudentList'</span>;
+
+<span class="cmt">// With lazy — only when user visits /students</span>
+<span class="kw">const</span> StudentList = React.lazy(
+  () => <span class="kw">import</span>(<span class="str">'./pages/StudentList'</span>)
+);
+
+<span class="jsx">&lt;Suspense</span> <span class="attr">fallback</span>={<span class="jsx">&lt;div&gt;</span>Loading...<span class="jsx">&lt;/div&gt;</span>}<span class="jsx">&gt;</span>
+  <span class="jsx">&lt;StudentList /&gt;</span>
+<span class="jsx">&lt;/Suspense&gt;</span></pre>
+      <div class="qa-t">Large apps-ல initial load slow ஆகும். Lazy loading use பண்ணா, user click பண்ணும்போது மட்டும் JS load ஆகும். First paint fast. Resume போடும்போது "Code splitting + lazy loading implement பண்ணினேன்" சொல்லுங்க.</div>
+    </div>
+
+  </div>
+
+  <!-- Cheat Sheet -->
+  <div class="step" style="margin-top:30px">
+    <div class="step-header">
+      <div class="step-num">📋</div>
+      <div>
+        <div class="step-title">Quick Cheat Sheet — Hook Usage Guide</div>
+        <div class="step-sub">Interview-ல எந்த hook எப்போ use பண்றதுன்னு</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <table>
+        <tr><th>Situation</th><th>Hook / Solution</th><th>C# Analogy</th></tr>
+        <tr><td>Store UI state (count, loading, input)</td><td class="green-cell">useState</td><td>private field</td></tr>
+        <tr><td>API call on page load</td><td class="green-cell">useEffect(fn, [])</td><td>OnGet() / Page_Load</td></tr>
+        <tr><td>API call when ID changes</td><td class="green-cell">useEffect(fn, [id])</td><td>Watch property</td></tr>
+        <tr><td>Global user/auth state</td><td class="green-cell">useContext + createContext</td><td>HttpContext.Session</td></tr>
+        <tr><td>Cache expensive calculation</td><td class="yellow-cell">useMemo</td><td>Lazy&lt;T&gt;</td></tr>
+        <tr><td>Stable callback reference</td><td class="yellow-cell">useCallback</td><td>Cached delegate</td></tr>
+        <tr><td>DOM element direct access</td><td class="yellow-cell">useRef</td><td>HtmlControl reference</td></tr>
+        <tr><td>Reuse stateful logic</td><td class="green-cell">Custom Hook (useXxx)</td><td>Service/Helper class</td></tr>
+        <tr><td>URL params (/students/:id)</td><td class="green-cell">useParams</td><td>Route values</td></tr>
+        <tr><td>Redirect after save</td><td class="green-cell">useNavigate</td><td>RedirectToAction</td></tr>
+        <tr><td>Previous page URL query (?search=x)</td><td class="green-cell">useSearchParams</td><td>Request.QueryString</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /interview -->
+
+<!-- Footer -->
+<div class="footer">
+  <p>🚀 React Complete Guide — Gurumoorthy M | ZenCampus Project | 2026</p>
+  <p style="margin-top:6px">Backend: .NET 9 Minimal API + JWT &nbsp;|&nbsp; Frontend: React 19 + Vite + React Router v7</p>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

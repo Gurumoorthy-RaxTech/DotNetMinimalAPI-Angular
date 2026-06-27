@@ -142,7 +142,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
-        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+        policy.WithOrigins(
+                  "http://localhost:4200", "https://localhost:4200",  // Angular
+                  "http://localhost:5173", "https://localhost:5173"   // React (Vite)
+              )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials());
