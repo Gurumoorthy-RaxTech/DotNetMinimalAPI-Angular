@@ -1,5 +1,5 @@
 // ============================================================
-// MINIMAL API WITH JWT + VERSIONING - COMPLETE EXPLANATION
+// MINIMAL API WITH JWT + VERSIONING + SIGNALR
 // Author: Gurumoorthy M | Interview Preparation Project
 // ============================================================
 
@@ -12,235 +12,174 @@ using MinimalApiJwt.Endpoints;
 using MinimalApiJwt.Hubs;
 using MinimalApiJwt.Services;
 
-// STEP 1: WebApplication.CreateBuilder
-// Builder create pannuvom - dependency injection, configuration load aagum
 var builder = WebApplication.CreateBuilder(args);
 
-// ============================================================
-// STEP 2: SERVICES REGISTER PANNUVOM (Dependency Injection)
-// ============================================================
-
-// JWT Service register - interface -> implementation mapping
+// ── SERVICES ─────────────────────────────────────────────────
 builder.Services.AddScoped<IJwtService, JwtService>();
-
-// Student Service register
 builder.Services.AddScoped<IStudentService, StudentService>();
 
-// ============================================================
-// SIGNALR CONFIGURE PANNUVOM
-// Tanglish: Real-time bi-directional communication enable pannuvom
-// WebSocket use pannuvom - HTTP unlike oru connection open aa irukum
-// ============================================================
+// ── SIGNALR ──────────────────────────────────────────────────
 builder.Services.AddSignalR(options =>
 {
-    options.EnableDetailedErrors = true;         // Development - detailed errors show
-    options.KeepAliveInterval = TimeSpan.FromSeconds(15); // Connection alive keep pannuvom
+    options.EnableDetailedErrors = true;
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
     options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
 });
 
-// Background Service - every 2 seconds stats broadcast pannuvom
-builder.Services.AddHostedService<DashboardBackgroundService>();
-// Singleton aa register - other services inject pannalam
+// BUG FIX 1: AddHostedService + AddSingleton = 2 instances!
+// Correct way: Singleton register → same instance as HostedService use pannuvom
 builder.Services.AddSingleton<DashboardBackgroundService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<DashboardBackgroundService>());
 
-// ============================================================
-// STEP 3: JWT AUTHENTICATION CONFIGURE PANNUVOM
-// ============================================================
+// ── JWT AUTHENTICATION ────────────────────────────────────────
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSettings["SecretKey"]!;
+var secretKey   = jwtSettings["SecretKey"]!;
 
 builder.Services.AddAuthentication(options =>
 {
-    // Default scheme - JWT Bearer use pannuvom
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        // Issuer validate pannuvom - token யாரு create pannaru
-        ValidateIssuer = true,
-        ValidIssuer = jwtSettings["Issuer"],
-
-        // Audience validate pannuvom - token யாருக்காக
-        ValidateAudience = true,
-        ValidAudience = jwtSettings["Audience"],
-
-        // Token expire aagiruchaa check pannuvom
-        ValidateLifetime = true,
-
-        // Secret key validate pannuvom
+        ValidateIssuer           = true,
+        ValidIssuer              = jwtSettings["Issuer"],
+        ValidateAudience         = true,
+        ValidAudience            = jwtSettings["Audience"],
+        ValidateLifetime         = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(secretKey))
+        IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+
+    // BUG FIX 2: SignalR JWT — WebSocket header Bearer token send panna mudiyathu!
+    // Token query string la varum: ?access_token=xxx
+    // Idha read panni validate pannuvom — otherwise hub always 401 return pannuvom
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // SignalR hub path check pannuvom
+            var path = context.HttpContext.Request.Path;
+            if (path.StartsWithSegments("/hubs"))
+            {
+                // Query string la token irukka padikuvom
+                var token = context.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(token))
+                    context.Token = token; // JWT middleware ku set pannuvom
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
-// ============================================================
-// STEP 4: AUTHORIZATION POLICIES CONFIGURE PANNUVOM
-// ============================================================
+// ── AUTHORIZATION POLICIES ───────────────────────────────────
 builder.Services.AddAuthorization(options =>
 {
-    // AdminOnly policy - only Admin role access panlam
-    options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole("Admin"));
-
-    // StudentOrAdmin policy - both roles access panlam
-    options.AddPolicy("StudentOrAdmin", policy =>
-        policy.RequireRole("Student", "Admin"));
+    options.AddPolicy("AdminOnly",      policy => policy.RequireRole("Admin"));
+    options.AddPolicy("StudentOrAdmin", policy => policy.RequireRole("Student", "Admin"));
 });
 
-// ============================================================
-// STEP 5: API VERSIONING CONFIGURE PANNUVOM
-// ============================================================
+// ── API VERSIONING ───────────────────────────────────────────
 builder.Services.AddApiVersioning(options =>
 {
-    // Default version - client specify pannavidaal v1 use aagum
-    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.DefaultApiVersion                   = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
-
-    // Version read pannura ways:
-    // URL path: /api/v1/students
-    // Header: Api-Version: 1.0
-    // Query: ?api-version=1.0
-    options.ReportApiVersions = true; // Response header la version info show aagum
+    options.ReportApiVersions                   = true;
     options.ApiVersionReader = ApiVersionReader.Combine(
-        new UrlSegmentApiVersionReader(),   // /api/v1/ from URL
-        new HeaderApiVersionReader("Api-Version"),  // from Header
-        new QueryStringApiVersionReader("api-version")  // from Query string
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("Api-Version"),
+        new QueryStringApiVersionReader("api-version")
     );
 })
 .AddApiExplorer(options =>
 {
-    options.GroupNameFormat = "'v'VVV";
+    options.GroupNameFormat        = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
 });
 
-// ============================================================
-// STEP 6: SWAGGER CONFIGURE PANNUVOM
-// ============================================================
+// ── SWAGGER ───────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // V1 Swagger doc
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "MinimalAPI JWT - SmartSchool API",
-        Version = "v1",
-        Description = "JWT Authentication + API Versioning Demo | By Gurumoorthy M"
+        Title       = "MinimalAPI JWT - SmartSchool API",
+        Version     = "v1",
+        Description = "JWT + Versioning + SignalR | By Gurumoorthy M"
     });
-
-    // V2 Swagger doc
     options.SwaggerDoc("v2", new OpenApiInfo
     {
-        Title = "MinimalAPI JWT - SmartSchool API",
+        Title   = "MinimalAPI JWT - SmartSchool API",
         Version = "v2",
         Description = "V2 - With Course Filter Feature"
     });
 
-    // Swagger la JWT token enter pannuvom - lock icon show aagum
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
+        Name        = "Authorization",
+        Type        = SecuritySchemeType.Http,
+        Scheme      = "bearer",
         BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter JWT token: Bearer {your_token}"
+        In          = ParameterLocation.Header,
+        Description = "Enter JWT token"
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
             },
             Array.Empty<string>()
         }
     });
 });
 
-// ============================================================
-// STEP 7: CORS CONFIGURE PANNUVOM (Angular access ku)
-// ============================================================
+// ── CORS ─────────────────────────────────────────────────────
+// AllowCredentials() — SignalR ku mandatory!
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
-    {
-        policy.WithOrigins(
-                "http://localhost:4200",  // Angular dev server
-                "https://localhost:4200"
-              )
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); // SignalR ku AllowCredentials mandatory!
-    });
+              .AllowCredentials());
 });
 
-// ============================================================
-// STEP 8: APP BUILD PANNUVOM
-// ============================================================
+// ── BUILD ────────────────────────────────────────────────────
 var app = builder.Build();
 
-// ============================================================
-// STEP 9: MIDDLEWARE PIPELINE CONFIGURE PANNUVOM
-// Order matters! - Middleware order correct aa irukkanum
-// ============================================================
-
-// Development la Swagger show pannuvom
+// ── MIDDLEWARE PIPELINE ───────────────────────────────────────
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        // Both versions show aagum
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
         options.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
         options.RoutePrefix = "swagger";
     });
 }
 
-// HTTPS redirect
-app.UseHttpsRedirection();
+// NOTE: Remove UseHttpsRedirection — http://localhost:5260 use pannrom
+// app.UseHttpsRedirection();
 
-// CORS - Angular request allow pannuvom (Authentication before CORS important!)
-app.UseCors("AllowAngular");
+app.UseCors("AllowAngular");       // CORS first — SignalR preflight handle pannuvom
+app.UseAuthentication();           // JWT validate pannuvom
+app.UseAuthorization();            // Role/policy check pannuvom
 
-// Authentication - "யாரு nee?" check pannuvom (JWT token validate)
-app.UseAuthentication();
+// ── ENDPOINTS ────────────────────────────────────────────────
+app.MapAuthEndpoints();
+app.MapStudentEndpoints();
+app.MapHub<DashboardHub>("/hubs/dashboard");  // SignalR hub
 
-// Authorization - "permission irukka?" check pannuvom
-app.UseAuthorization();
-
-// ============================================================
-// STEP 10: ENDPOINTS MAP PANNUVOM
-// ============================================================
-app.MapAuthEndpoints();     // /api/v1/auth/login
-app.MapStudentEndpoints();  // /api/v1/students, /api/v2/students
-
-// ============================================================
-// SIGNALR HUB MAP PANNUVOM
-// Tanglish: /hubs/dashboard URL la SignalR connection accept pannuvom
-// Angular la: new HubConnectionBuilder().withUrl("/hubs/dashboard")
-// ============================================================
-app.MapHub<DashboardHub>("/hubs/dashboard");
-
-// Health check endpoint
 app.MapGet("/health", () => Results.Ok(new
 {
-    Status = "Healthy",
+    Status    = "Healthy",
     Timestamp = DateTime.UtcNow,
-    Version = "1.0.0",
-    Service = "MinimalAPI JWT - SmartSchool + SignalR"
+    Service   = "MinimalAPI + SignalR"
 })).AllowAnonymous().WithTags("Health");
 
-// ============================================================
-// STEP 11: APP RUN PANNUVOM
-// ============================================================
 app.Run();
