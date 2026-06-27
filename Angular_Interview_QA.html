@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angular Interview Guide — Gurumoorthy M | .NET + Angular Position</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.7; }
+
+  .header { background: linear-gradient(135deg, #dd0031 0%, #c3002f 50%, #1a1a2e 100%); padding: 40px; text-align: center; }
+  .header h1 { font-size: 2.4em; color: #fff; margin-bottom: 8px; }
+  .header p { color: #ffb3c1; font-size: 1.1em; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 0.85em; margin: 4px; }
+
+  .toc { background: #161b22; border: 1px solid #30363d; border-radius: 10px; margin: 24px; padding: 24px; }
+  .toc h2 { color: #dd0031; margin-bottom: 16px; font-size: 1.3em; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+  .toc a { color: #58a6ff; text-decoration: none; font-size: 0.9em; padding: 4px 8px; border-radius: 4px; display: block; }
+  .toc a:hover { background: #21262d; }
+
+  .section { margin: 24px; background: #161b22; border: 1px solid #30363d; border-radius: 12px; overflow: hidden; }
+  .section-header { background: #21262d; padding: 18px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #dd0031; }
+  .section-header .num { background: #dd0031; color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; flex-shrink: 0; }
+  .section-header h2 { color: #f0f6fc; font-size: 1.3em; }
+  .section-body { padding: 24px; }
+
+  .concept { background: #0d1117; border: 1px solid #21262d; border-left: 4px solid #dd0031; border-radius: 8px; padding: 16px; margin: 12px 0; }
+  .concept h3 { color: #58a6ff; margin-bottom: 8px; font-size: 1.05em; }
+  .english { color: #adbac7; font-size: 0.95em; margin-bottom: 8px; }
+  .tanglish { background: #1c2128; border-radius: 6px; padding: 10px 14px; color: #7ee787; font-size: 0.9em; border-left: 3px solid #7ee787; margin-top: 8px; }
+  .tanglish::before { content: "🗣️ Tanglish: "; font-weight: bold; }
+
+  pre { background: #010409; border: 1px solid #30363d; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 0.85em; line-height: 1.6; }
+  .kw { color: #ff7b72; }
+  .cls { color: #ffa657; }
+  .str { color: #a5d6ff; }
+  .cmt { color: #8b949e; font-style: italic; }
+  .dec { color: #d2a8ff; }
+  .fn { color: #79c0ff; }
+  .val { color: #79c0ff; }
+  .tag { color: #7ee787; }
+  .attr { color: #ffa657; }
+  .bind { color: #f2cc60; }
+
+  .qa-card { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; margin: 14px 0; overflow: hidden; }
+  .qa-q { background: #1c2128; padding: 14px 18px; color: #e6edf3; font-weight: 600; border-left: 4px solid #f0883e; }
+  .qa-q::before { content: "Q: "; color: #f0883e; }
+  .qa-a { padding: 14px 18px; color: #adbac7; font-size: 0.95em; }
+  .qa-a strong { color: #58a6ff; }
+  .qa-t { background: #161b22; padding: 10px 18px; font-size: 0.88em; color: #7ee787; border-top: 1px solid #21262d; }
+  .qa-t::before { content: "💬 "; }
+
+  .tip { background: #1a2332; border: 1px solid #1f6feb; border-radius: 8px; padding: 14px; margin: 10px 0; }
+  .tip::before { content: "💡 Interview Tip: "; color: #79c0ff; font-weight: bold; }
+  .tip { color: #adbac7; font-size: 0.9em; }
+
+  .warn { background: #2d1f0e; border: 1px solid #9e6a03; border-radius: 8px; padding: 12px 14px; margin: 10px 0; color: #e3b341; font-size: 0.9em; }
+  .warn::before { content: "⚠️ Common Mistake: "; font-weight: bold; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .compare-box { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 14px; }
+  .compare-box h4 { color: #7ee787; margin-bottom: 8px; font-size: 0.95em; }
+  .compare-box.bad h4 { color: #ff7b72; }
+
+  .roadmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .road-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; text-align: center; }
+  .road-card .icon { font-size: 2em; margin-bottom: 8px; }
+  .road-card h4 { color: #58a6ff; margin-bottom: 6px; font-size: 0.95em; }
+  .road-card ul { list-style: none; color: #8b949e; font-size: 0.82em; }
+  .road-card ul li::before { content: "→ "; color: #dd0031; }
+
+  .level { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: bold; margin-left: 8px; }
+  .l1 { background: #1a472a; color: #7ee787; }
+  .l2 { background: #2d2005; color: #e3b341; }
+  .l3 { background: #3d1a1a; color: #ff7b72; }
+
+  .footer { text-align: center; padding: 30px; color: #484f58; font-size: 0.9em; background: #0d1117; border-top: 1px solid #21262d; }
+
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } .roadmap { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ Angular Interview Complete Guide</h1>
+  <p>For .NET + Angular Developer Position | Gurumoorthy M</p>
+  <div style="margin-top:14px">
+    <span class="badge">Angular 17+</span>
+    <span class="badge">Standalone Components</span>
+    <span class="badge">Signals</span>
+    <span class="badge">RxJS</span>
+    <span class="badge">.NET Integration</span>
+    <span class="badge">Tanglish Explained</span>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>📚 Topics Covered (Scratch → Interview Level)</h2>
+  <div class="toc-grid">
+    <a href="#s1">1. Angular என்ன? Architecture Overview</a>
+    <a href="#s2">2. Component — Angular UI building block</a>
+    <a href="#s3">3. Data Binding — 4 Types</a>
+    <a href="#s4">4. Directives — ngIf, ngFor, ngClass</a>
+    <a href="#s5">5. Services & Dependency Injection</a>
+    <a href="#s6">6. HttpClient — API calls</a>
+    <a href="#s7">7. Routing & Navigation</a>
+    <a href="#s8">8. Forms — Template & Reactive</a>
+    <a href="#s9">9. RxJS & Observables</a>
+    <a href="#s10">10. Pipes — Data transform</a>
+    <a href="#s11">11. Lifecycle Hooks</a>
+    <a href="#s12">12. Guards — Route protection</a>
+    <a href="#s13">13. Interceptors — HTTP middleware</a>
+    <a href="#s14">14. Standalone Components (Angular 14+)</a>
+    <a href="#s15">15. Signals (Angular 17+)</a>
+    <a href="#s16">16. .NET + Angular Integration</a>
+    <a href="#s17">17. Top 50 Interview Q&A</a>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="section">
+  <div class="section-header">
+    <div class="num">🗺</div>
+    <h2>Angular Learning Roadmap — Week by Week</h2>
+  </div>
+  <div class="section-body">
+    <div class="roadmap">
+      <div class="road-card">
+        <div class="icon">🌱</div>
+        <h4>Week 1 — Basics</h4>
+        <ul>
+          <li>Component</li>
+          <li>Template Syntax</li>
+          <li>Data Binding</li>
+          <li>Directives</li>
+        </ul>
+      </div>
+      <div class="road-card">
+        <div class="icon">⚙️</div>
+        <h4>Week 2 — Core</h4>
+        <ul>
+          <li>Services + DI</li>
+          <li>HttpClient</li>
+          <li>Routing</li>
+          <li>Guards</li>
+        </ul>
+      </div>
+      <div class="road-card">
+        <div class="icon">📋</div>
+        <h4>Week 3 — Forms</h4>
+        <ul>
+          <li>Reactive Forms</li>
+          <li>Validators</li>
+          <li>FormBuilder</li>
+          <li>FormGroup</li>
+        </ul>
+      </div>
+      <div class="road-card">
+        <div class="icon">🔄</div>
+        <h4>Week 4 — Advanced</h4>
+        <ul>
+          <li>RxJS Operators</li>
+          <li>Interceptors</li>
+          <li>Signals</li>
+          <li>Lazy Loading</li>
+        </ul>
+      </div>
+      <div class="road-card">
+        <div class="icon">🔗</div>
+        <h4>Week 5 — Integration</h4>
+        <ul>
+          <li>.NET API Connect</li>
+          <li>JWT Auth</li>
+          <li>SignalR</li>
+          <li>Error Handling</li>
+        </ul>
+      </div>
+      <div class="road-card">
+        <div class="icon">🎯</div>
+        <h4>Week 6 — Interview</h4>
+        <ul>
+          <li>Mock Interviews</li>
+          <li>Project Review</li>
+          <li>Live Coding</li>
+          <li>Q&A Practice</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1: ANGULAR OVERVIEW -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="num">1</div>
+    <h2>Angular என்ன? — Architecture Overview <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <h3>What is Angular?</h3>
+      <p class="english">Angular is a <strong>TypeScript-based front-end framework</strong> by Google for building Single Page Applications (SPA). It handles routing, forms, HTTP calls, and state — everything in one framework.</p>
+      <div class="tanglish">Google create panniya TypeScript framework. React mathiri library illai — full framework! SPA (Single Page Application) build pannuvom — oru HTML page thaan, URL maarina content dynamically change aagum, full page reload illai.</div>
+    </div>
+
+    <div class="concept">
+      <h3>Angular Architecture — 6 Main Building Blocks</h3>
+      <p class="english">Angular app consists of: Components → Templates → Services → Modules (old) → Routing → Directives</p>
+      <pre><span class="cmt">// Angular Application Structure</span>
+AppComponent (Root)
+  ├── NavbarComponent
+  ├── LoginComponent  ← Route: /login
+  ├── DashboardComponent ← Route: /dashboard
+  │     ├── StatsCardComponent (child)
+  │     └── ChartComponent (child)
+  └── StudentListComponent ← Route: /students
+
+<span class="cmt">// Each Component has 3 parts:</span>
+student.component.ts    <span class="cmt">// Logic (TypeScript class)</span>
+student.component.html  <span class="cmt">// Template (HTML)</span>
+student.component.scss  <span class="cmt">// Styles (CSS/SCSS)</span></pre>
+      <div class="tanglish">Angular app = Component tree. Oru root component irukum (AppComponent), adhu keezhaye child components irukum. Har component ku 3 files — logic (.ts), HTML (.html), styles (.scss).</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Angular vs React vs Vue — difference?</div>
+      <div class="qa-a">
+        <strong>Angular:</strong> Full framework (Google), TypeScript mandatory, opinionated — has routing, forms, HTTP built-in.<br>
+        <strong>React:</strong> UI library (Meta), JavaScript/TypeScript, flexible — need extra packages for routing, state.<br>
+        <strong>Vue:</strong> Progressive framework, gentle learning curve, popular in Asia.<br>
+        For <strong>.NET projects</strong> — Angular is most common because both are strongly typed.
+      </div>
+      <div class="qa-t">Angular = Full framework, TypeScript, Google. React = UI library, Facebook. .NET projects la Angular prefer pannuvanga — both TypeScript + C# strongly typed, similar concepts.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: COMPONENT -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="num">2</div>
+    <h2>Component — Angular UI Building Block <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <h3>Component Anatomy</h3>
+      <p class="english">Every UI piece in Angular is a Component. It has a TypeScript class with <code>@Component</code> decorator.</p>
+    </div>
+    <pre><span class="cmt">// student.component.ts</span>
+<span class="kw">import</span> { <span class="cls">Component</span>, <span class="cls">OnInit</span>, <span class="cls">Input</span>, <span class="cls">Output</span>, <span class="cls">EventEmitter</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dec">@Component</span>({
+  selector: <span class="str">'app-student'</span>,   <span class="cmt">// HTML la &lt;app-student&gt; use pannuvom</span>
+  standalone: <span class="val">true</span>,           <span class="cmt">// Modern Angular — no NgModule needed</span>
+  templateUrl: <span class="str">'./student.component.html'</span>,
+  styleUrls: [<span class="str">'./student.component.scss'</span>]
+})
+<span class="kw">export class</span> <span class="cls">StudentComponent</span> <span class="kw">implements</span> <span class="cls">OnInit</span> {
+
+  <span class="cmt">// @Input — Parent → Child data pass pannuvom</span>
+  <span class="dec">@Input</span>() studentName: <span class="kw">string</span> = <span class="str">''</span>;
+
+  <span class="cmt">// @Output — Child → Parent event emit pannuvom</span>
+  <span class="dec">@Output</span>() deleted = <span class="kw">new</span> <span class="cls">EventEmitter</span>&lt;<span class="kw">number</span>&gt;();
+
+  title = <span class="str">'Student List'</span>;
+  students: <span class="kw">string</span>[] = [<span class="str">'Guru'</span>, <span class="str">'Basha'</span>, <span class="str">'Sridhar'</span>];
+
+  <span class="cmt">// ngOnInit — component load aana first thing run aagum</span>
+  <span class="fn">ngOnInit</span>(): <span class="kw">void</span> {
+    console.<span class="fn">log</span>(<span class="str">'Component loaded!'</span>);
+  }
+
+  <span class="fn">deleteStudent</span>(id: <span class="kw">number</span>): <span class="kw">void</span> {
+    <span class="kw">this</span>.deleted.<span class="fn">emit</span>(id); <span class="cmt">// Parent ku event notify pannuvom</span>
+  }
+}</pre>
+
+    <pre><span class="cmt">&lt;!-- student.component.html --&gt;</span>
+<span class="tag">&lt;h2&gt;</span>{{ title }}<span class="tag">&lt;/h2&gt;</span>          <span class="cmt">&lt;!-- Interpolation --&gt;</span>
+
+<span class="tag">&lt;p&gt;</span>Hello, {{ studentName }}!<span class="tag">&lt;/p&gt;</span>  <span class="cmt">&lt;!-- @Input value display --&gt;</span>
+
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li</span> <span class="bind">*ngFor</span><span class="attr">="let s of students"</span><span class="tag">&gt;</span>
+    {{ s }}
+    <span class="tag">&lt;button</span> <span class="bind">(click)</span><span class="attr">="deleteStudent(1)"</span><span class="tag">&gt;</span>Delete<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cmt">&lt;!-- Parent component la use pannuvom: --&gt;</span>
+<span class="tag">&lt;app-student</span>
+  <span class="bind">[studentName]</span><span class="attr">="'Gurumoorthy'"</span>
+  <span class="bind">(deleted)</span><span class="attr">="onStudentDeleted($event)"</span>
+<span class="tag">&gt;&lt;/app-student&gt;</span></pre>
+    <div class="tanglish">Component = Angular la oru UI block. @Component decorator use pannuvom. @Input = parent kooda data receive pannuvom. @Output + EventEmitter = parent ku event send pannuvom. ngOnInit = component create aana first API call, data load panna use pannuvom.</div>
+
+    <div class="qa-card">
+      <div class="qa-q">@Input and @Output என்ன? Real world example?</div>
+      <div class="qa-a">
+        <strong>@Input:</strong> Parent → Child la data pass pannuvom. Like function parameter.<br>
+        <strong>@Output + EventEmitter:</strong> Child → Parent ku event notify pannuvom. Like callback.<br>
+        Example: StudentList (parent) → StudentCard (child). Card la delete button click pannuvom → parent ku event emit → parent list update pannuvom.
+      </div>
+      <div class="qa-t">@Input = parent irunthu data vangarom. @Output = child irunthu parent ku event anupuvom. Real world: Product list parent → Product card child. Card la add-to-cart click → parent notify → cart update.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: DATA BINDING -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="num">3</div>
+    <h2>Data Binding — 4 Types <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <h3>4 Types of Data Binding</h3>
+    </div>
+    <pre><span class="cmt">// 1. INTERPOLATION — {{ }} — Component → Template (One-way)</span>
+<span class="tag">&lt;h1&gt;</span>{{ title }}<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Total: {{ students.length }}<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ 2 + 2 }}<span class="tag">&lt;/p&gt;</span>  <span class="cmt">&lt;!-- Expressions also work --&gt;</span>
+
+<span class="cmt">// 2. PROPERTY BINDING — [] — Component → Template (One-way)</span>
+<span class="tag">&lt;img</span> <span class="bind">[src]</span><span class="attr">="imageUrl"</span><span class="tag">&gt;</span>            <span class="cmt">&lt;!-- src = component variable --&gt;</span>
+<span class="tag">&lt;button</span> <span class="bind">[disabled]</span><span class="attr">="isLoading"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;input</span> <span class="bind">[value]</span><span class="attr">="username"</span><span class="tag">&gt;</span>
+
+<span class="cmt">// 3. EVENT BINDING — () — Template → Component (One-way)</span>
+<span class="tag">&lt;button</span> <span class="bind">(click)</span><span class="attr">="saveStudent()"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;input</span> <span class="bind">(input)</span><span class="attr">="onSearch($event)"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;form</span> <span class="bind">(submit)</span><span class="attr">="onSubmit()"</span><span class="tag">&gt;</span>
+
+<span class="cmt">// 4. TWO-WAY BINDING — [(ngModel)] — Both directions</span>
+<span class="cmt">// Import: FormsModule in component imports</span>
+<span class="tag">&lt;input</span> <span class="bind">[(ngModel)]</span><span class="attr">="searchText"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;p&gt;</span>You typed: {{ searchText }}<span class="tag">&lt;/p&gt;</span>
+<span class="cmt">// Input change → searchText update → p tag auto update</span></pre>
+
+    <div class="tanglish">{{ }} = class variable la irukuradha HTML la show pannuvom. [ ] = HTML attribute ku value bind pannuvom (disabled, src, etc). ( ) = button click, input change mathiri events catch pannuvom. [( )] = input field change aana class variable change aagum, class variable change aana input field change aagum — two-way!</div>
+
+    <div class="qa-card">
+      <div class="qa-q">Two-way binding epdi work aagum? [(ngModel)] banana brackets enna?</div>
+      <div class="qa-a">
+        <strong>Banana in a box!</strong> <code>[()]</code> = Property binding + Event binding combined.<br>
+        <code>[(ngModel)]="name"</code> is shorthand for <code>[ngModel]="name" (ngModelChange)="name=$event"</code><br>
+        When user types → ngModelChange fires → updates <code>name</code> property → DOM updates automatically.
+      </div>
+      <div class="qa-t">[(ngModel)] = "banana in a box" — [] property binding + () event binding combine pannuvom. Input type panna → component variable update → everywhere auto update. FormsModule import panna maranthal error varum!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: DIRECTIVES -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="num">4</div>
+    <h2>Directives — ngIf, ngFor, ngClass <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <pre><span class="cmt">&lt;!-- *ngIf — Conditional render --&gt;</span>
+<span class="tag">&lt;div</span> <span class="bind">*ngIf</span><span class="attr">="isLoggedIn"</span><span class="tag">&gt;</span>Welcome Admin!<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="bind">*ngIf</span><span class="attr">="isLoading; else content"</span><span class="tag">&gt;</span>Loading...<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;ng-template</span> <span class="attr">#content</span><span class="tag">&gt;</span>Data loaded!<span class="tag">&lt;/ng-template&gt;</span>
+
+<span class="cmt">&lt;!-- Modern Angular 17+ — @if @else (no *ngIf needed) --&gt;</span>
+@if (isLoggedIn) {
+  <span class="tag">&lt;div&gt;</span>Welcome!<span class="tag">&lt;/div&gt;</span>
+} @else {
+  <span class="tag">&lt;div&gt;</span>Please login<span class="tag">&lt;/div&gt;</span>
+}
+
+<span class="cmt">&lt;!-- *ngFor — Loop --&gt;</span>
+<span class="tag">&lt;tr</span> <span class="bind">*ngFor</span><span class="attr">="let student of students; let i = index; trackBy: trackById"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;td&gt;</span>{{ i + 1 }}<span class="tag">&lt;/td&gt;</span>
+  <span class="tag">&lt;td&gt;</span>{{ student.name }}<span class="tag">&lt;/td&gt;</span>
+<span class="tag">&lt;/tr&gt;</span>
+
+<span class="cmt">&lt;!-- Modern Angular 17+ — @for --&gt;</span>
+@for (student of students; track student.id) {
+  <span class="tag">&lt;tr&gt;&lt;td&gt;</span>{{ student.name }}<span class="tag">&lt;/td&gt;&lt;/tr&gt;</span>
+}
+
+<span class="cmt">&lt;!-- ngClass — Dynamic CSS class --&gt;</span>
+<span class="tag">&lt;div</span> <span class="bind">[ngClass]</span><span class="attr">="{'active': isActive, 'error': hasError}"</span><span class="tag">&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;button</span> <span class="bind">[class.disabled]</span><span class="attr">="isLoading"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span>
+
+<span class="cmt">&lt;!-- ngStyle — Dynamic styles --&gt;</span>
+<span class="tag">&lt;div</span> <span class="bind">[ngStyle]</span><span class="attr">="{'color': isError ? 'red' : 'green', 'font-size': '16px'}"</span><span class="tag">&gt;&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- ngSwitch --&gt;</span>
+<span class="tag">&lt;div</span> <span class="bind">[ngSwitch]</span><span class="attr">="role"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="bind">*ngSwitchCase</span><span class="attr">="'Admin'"</span><span class="tag">&gt;</span>🔴 Admin<span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;span</span> <span class="bind">*ngSwitchCase</span><span class="attr">="'Student'"</span><span class="tag">&gt;</span>🟢 Student<span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;span</span> <span class="bind">*ngSwitchDefault</span><span class="tag">&gt;</span>Unknown<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+    <div class="tanglish">*ngIf = if condition true aana HTML show pannuvom. *ngFor = array loop pannavom (C# foreach mathiri). ngClass = condition based la CSS class add/remove pannuvom. trackBy use pannuvom — performance improve aagum (har loop la new DOM create panna vendama track pannuvom).</div>
+
+    <div class="qa-card">
+      <div class="qa-q">trackBy en use pannuvom *ngFor la?</div>
+      <div class="qa-a">Without trackBy, Angular destroys and recreates ALL DOM elements when data changes. With trackBy, it identifies items by unique key (like id) and only updates changed items — <strong>big performance boost</strong> for large lists.</div>
+      <div class="qa-t">trackBy illama = list change aana ALL elements delete → recreate = slow. trackBy kooda = only changed element update = fast. 100 students irundha, oru student update aana 99 DOM elements touch pannama irukum!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: SERVICES & DI -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="num">5</div>
+    <h2>Services & Dependency Injection <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <h3>Service — Shared Business Logic</h3>
+      <p class="english">Services hold business logic, API calls, shared data. Injected into components via DI — same as ASP.NET Core's DI!</p>
+      <div class="tanglish">Service = reusable logic. Student list 5 components la use pananumna, 5 lom same code ezhudhathe — oru Service la ezhudhi inject pannuvom. .NET la AddScoped/AddSingleton mathiri — Angular la providedIn: 'root' = Singleton.</div>
+    </div>
+    <pre><span class="cmt">// student.service.ts</span>
+<span class="kw">import</span> { <span class="cls">Injectable</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { <span class="cls">HttpClient</span> } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;
+<span class="kw">import</span> { <span class="cls">Observable</span> } <span class="kw">from</span> <span class="str">'rxjs'</span>;
+
+<span class="dec">@Injectable</span>({
+  providedIn: <span class="str">'root'</span>  <span class="cmt">// App-level Singleton — everywhere inject panlam</span>
+               <span class="cmt">// 'component' = new instance per component</span>
+               <span class="cmt">// [] = specific module only</span>
+})
+<span class="kw">export class</span> <span class="cls">StudentService</span> {
+
+  <span class="kw">private</span> apiUrl = <span class="str">'http://localhost:5260/api/v2/students'</span>;
+
+  <span class="fn">constructor</span>(<span class="kw">private</span> http: <span class="cls">HttpClient</span>) {}  <span class="cmt">// HttpClient inject aagum</span>
+
+  <span class="fn">getAll</span>(): <span class="cls">Observable</span>&lt;<span class="cls">Student</span>[]&gt; {
+    <span class="kw">return this</span>.http.<span class="fn">get</span>&lt;<span class="cls">Student</span>[]&gt;(<span class="kw">this</span>.apiUrl);
+  }
+}
+
+<span class="cmt">// component la inject pannuvom</span>
+<span class="kw">export class</span> <span class="cls">StudentListComponent</span> {
+  <span class="fn">constructor</span>(<span class="kw">private</span> studentService: <span class="cls">StudentService</span>) {}
+  <span class="cmt">// OR modern way:</span>
+  <span class="kw">private</span> studentService = <span class="fn">inject</span>(<span class="cls">StudentService</span>);
+}</pre>
+    <div class="qa-card">
+      <div class="qa-q">providedIn: 'root' vs providers array — difference?</div>
+      <div class="qa-a">
+        <strong>providedIn: 'root'</strong> = App-wide singleton, tree-shakeable (unused service removed in build).<br>
+        <strong>providers: [StudentService]</strong> in component = New instance for that component and children.<br>
+        Use 'root' for shared services (auth, student). Use component-level for isolated state.
+      </div>
+      <div class="qa-t">providedIn: 'root' = Singleton, oru instance app full la. Component la providers = har component ku new instance. .NET la Singleton vs Scoped mathiri concept same thaan!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: HTTPCLIENT -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="num">6</div>
+    <h2>HttpClient — API Calls <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <pre><span class="cmt">// Component la HTTP calls</span>
+<span class="dec">@Component</span>({ ... })
+<span class="kw">export class</span> <span class="cls">StudentListComponent</span> <span class="kw">implements</span> <span class="cls">OnInit</span> {
+
+  students: <span class="cls">Student</span>[] = [];
+  isLoading = <span class="val">false</span>;
+  error = <span class="str">''</span>;
+
+  <span class="kw">private</span> studentService = <span class="fn">inject</span>(<span class="cls">StudentService</span>);
+
+  <span class="fn">ngOnInit</span>() {
+    <span class="kw">this</span>.<span class="fn">loadStudents</span>();
+  }
+
+  <span class="fn">loadStudents</span>() {
+    <span class="kw">this</span>.isLoading = <span class="val">true</span>;
+
+    <span class="kw">this</span>.studentService.<span class="fn">getAll</span>().<span class="fn">subscribe</span>({
+      next: (data) => {         <span class="cmt">// Success — data vanduchu</span>
+        <span class="kw">this</span>.students = data;
+        <span class="kw">this</span>.isLoading = <span class="val">false</span>;
+      },
+      error: (err) => {         <span class="cmt">// Error — network fail, 500 etc</span>
+        <span class="kw">this</span>.error = err.message;
+        <span class="kw">this</span>.isLoading = <span class="val">false</span>;
+      },
+      complete: () => {         <span class="cmt">// Observable complete aagiduthu</span>
+        console.<span class="fn">log</span>(<span class="str">'Done'</span>);
+      }
+    });
+  }
+
+  <span class="fn">createStudent</span>(student: <span class="cls">Student</span>) {
+    <span class="kw">this</span>.studentService.<span class="fn">create</span>(student).<span class="fn">subscribe</span>({
+      next: () => <span class="kw">this</span>.<span class="fn">loadStudents</span>(),  <span class="cmt">// List refresh pannuvom</span>
+      error: (err) => alert(<span class="str">'Error: '</span> + err.message)
+    });
+  }
+}</pre>
+    <div class="tanglish">HttpClient = .NET la HttpClient mathiri thaan. get(), post(), put(), delete() methods irukku. Observable return pannuvom — subscribe() panna vendiyathu. next = success, error = fail, complete = done. Async operation — result vandhum subscribe callback la varum.</div>
+  </div>
+</div>
+
+<!-- SECTION 7: ROUTING -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="num">7</div>
+    <h2>Routing & Navigation <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <pre><span class="cmt">// app.routes.ts</span>
+<span class="kw">import</span> { <span class="cls">Routes</span> } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> routes: <span class="cls">Routes</span> = [
+  { path: <span class="str">''</span>, redirectTo: <span class="str">'/dashboard'</span>, pathMatch: <span class="str">'full'</span> },
+  { path: <span class="str">'login'</span>, <span class="fn">loadComponent</span>: () =>
+      <span class="kw">import</span>(<span class="str">'./login/login.component'</span>).<span class="fn">then</span>(m => m.<span class="cls">LoginComponent</span>) },
+  { path: <span class="str">'dashboard'</span>, <span class="fn">loadComponent</span>: () =>
+      <span class="kw">import</span>(<span class="str">'./dashboard/dashboard.component'</span>).<span class="fn">then</span>(m => m.<span class="cls">DashboardComponent</span>),
+    canActivate: [<span class="fn">authGuard</span>] },           <span class="cmt">// Guard protect pannuvom</span>
+  { path: <span class="str">'students/:id'</span>, component: <span class="cls">StudentDetailComponent</span> }, <span class="cmt">// Route param</span>
+  { path: <span class="str">'**'</span>, component: <span class="cls">NotFoundComponent</span> }  <span class="cmt">// Wildcard 404</span>
+];
+
+<span class="cmt">// Navigation — 2 ways</span>
+<span class="cmt">// 1. HTML Template la:</span>
+<span class="tag">&lt;a</span> <span class="bind">[routerLink]</span><span class="attr">="['/students', student.id]"</span><span class="tag">&gt;</span>View<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">routerLink</span><span class="attr">="/dashboard"</span> <span class="attr">routerLinkActive</span><span class="attr">="active"</span><span class="tag">&gt;</span>Dashboard<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">// 2. Component la programmatic:</span>
+<span class="kw">private</span> router = <span class="fn">inject</span>(<span class="cls">Router</span>);
+<span class="kw">this</span>.router.<span class="fn">navigate</span>([<span class="str">'/students'</span>, id]);
+<span class="kw">this</span>.router.<span class="fn">navigateByUrl</span>(<span class="str">'/login'</span>);
+
+<span class="cmt">// Route params read pannuvom</span>
+<span class="kw">private</span> route = <span class="fn">inject</span>(<span class="cls">ActivatedRoute</span>);
+<span class="kw">const</span> id = <span class="kw">this</span>.route.snapshot.paramMap.<span class="fn">get</span>(<span class="str">'id'</span>);       <span class="cmt">// One-time</span>
+<span class="kw">this</span>.route.params.<span class="fn">subscribe</span>(p => <span class="kw">this</span>.id = p[<span class="str">'id'</span>]);       <span class="cmt">// Reactive</span>
+
+<span class="cmt">// Query params: /students?page=2&search=guru</span>
+<span class="kw">const</span> page = <span class="kw">this</span>.route.snapshot.queryParamMap.<span class="fn">get</span>(<span class="str">'page'</span>);</pre>
+    <div class="tanglish">loadComponent = Lazy loading — page open agum pothu thaan component download aagum. First load fast aagum. canActivate guard = auth check pannuvom — login illama dashboard access panna mudiyathu. routerLink = href mathiri, aana full page reload illai.</div>
+
+    <div class="qa-card">
+      <div class="qa-q">Lazy Loading என்ன? En use pannuvom?</div>
+      <div class="qa-a">
+        Without lazy loading, Angular bundles ALL components into one JS file — initial load is slow.<br>
+        With lazy loading (<code>loadComponent</code>), each route's code is split into separate chunks and downloaded only when the user navigates to that route. <strong>Faster initial load!</strong>
+      </div>
+      <div class="qa-t">Lazy loading illama = 1 JS file la all components = 5MB download = slow. Lazy loading = har route ku separate chunk = only needed route download = fast. Real project la mandatory use pannuvanga.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8: FORMS -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="num">8</div>
+    <h2>Forms — Template-driven & Reactive <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="compare">
+      <div class="compare-box">
+        <h4>✅ Reactive Forms (Preferred)</h4>
+        <ul style="color:#adbac7;font-size:0.9em;list-style:disc;padding-left:16px">
+          <li>TypeScript la form define</li>
+          <li>Complex validations easy</li>
+          <li>Unit test possible</li>
+          <li>FormBuilder, FormGroup</li>
+          <li>Dynamic form fields</li>
+        </ul>
+      </div>
+      <div class="compare-box bad">
+        <h4>Template-driven Forms (Simple)</h4>
+        <ul style="color:#adbac7;font-size:0.9em;list-style:disc;padding-left:16px">
+          <li>HTML la ngModel use</li>
+          <li>Simple forms only</li>
+          <li>Auto-detect 2-way binding</li>
+          <li>FormsModule need</li>
+          <li>Testing hard</li>
+        </ul>
+      </div>
+    </div>
+    <pre><span class="cmt">// REACTIVE FORMS — Component la</span>
+<span class="kw">import</span> { <span class="cls">FormBuilder</span>, <span class="cls">FormGroup</span>, <span class="cls">Validators</span>, <span class="cls">ReactiveFormsModule</span> } <span class="kw">from</span> <span class="str">'@angular/forms'</span>;
+
+<span class="kw">export class</span> <span class="cls">StudentFormComponent</span> {
+  <span class="kw">private</span> fb = <span class="fn">inject</span>(<span class="cls">FormBuilder</span>);
+
+  studentForm: <span class="cls">FormGroup</span> = <span class="kw">this</span>.fb.<span class="fn">group</span>({
+    name:   [<span class="str">''</span>, [<span class="cls">Validators</span>.required, <span class="cls">Validators</span>.<span class="fn">minLength</span>(3)]],
+    email:  [<span class="str">''</span>, [<span class="cls">Validators</span>.required, <span class="cls">Validators</span>.email]],
+    age:    [<span class="val">null</span>, [<span class="cls">Validators</span>.required, <span class="cls">Validators</span>.<span class="fn">min</span>(10), <span class="cls">Validators</span>.<span class="fn">max</span>(100)]],
+    course: [<span class="str">''</span>, <span class="cls">Validators</span>.required]
+  });
+
+  <span class="cmt">// Form controls access pannuvom</span>
+  <span class="fn">get</span> nameControl() { <span class="kw">return this</span>.studentForm.<span class="fn">get</span>(<span class="str">'name'</span>); }
+
+  <span class="fn">onSubmit</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.studentForm.invalid) <span class="kw">return</span>;  <span class="cmt">// Validation fail = stop</span>
+    <span class="kw">const</span> data = <span class="kw">this</span>.studentForm.value;   <span class="cmt">// All form values object</span>
+    console.<span class="fn">log</span>(data); <span class="cmt">// { name: 'Guru', email: 'guru@...', age: 25, course: 'CS' }</span>
+  }
+
+  <span class="fn">resetForm</span>() { <span class="kw">this</span>.studentForm.<span class="fn">reset</span>(); }
+}
+
+<span class="cmt">&lt;!-- HTML Template --&gt;</span>
+<span class="tag">&lt;form</span> <span class="bind">[formGroup]</span><span class="attr">="studentForm"</span> <span class="bind">(ngSubmit)</span><span class="attr">="onSubmit()"</span><span class="tag">&gt;</span>
+
+  <span class="tag">&lt;input</span> <span class="attr">formControlName</span><span class="attr">="name"</span> <span class="attr">placeholder</span><span class="attr">="Name"</span><span class="tag">&gt;</span>
+  <span class="cmt">&lt;!-- Error messages --&gt;</span>
+  @if (nameControl?.invalid && nameControl?.touched) {
+    @if (nameControl?.errors?.['required']) {
+      <span class="tag">&lt;span</span> <span class="attr">class</span><span class="attr">="error"</span><span class="tag">&gt;</span>Name required<span class="tag">&lt;/span&gt;</span>
+    }
+    @if (nameControl?.errors?.['minlength']) {
+      <span class="tag">&lt;span</span> <span class="attr">class</span><span class="attr">="error"</span><span class="tag">&gt;</span>Min 3 characters<span class="tag">&lt;/span&gt;</span>
+    }
+  }
+
+  <span class="tag">&lt;input</span> <span class="attr">formControlName</span><span class="attr">="email"</span> <span class="attr">type</span><span class="attr">="email"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span><span class="attr">="submit"</span> <span class="bind">[disabled]</span><span class="attr">="studentForm.invalid"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+    <div class="tanglish">Reactive forms = TypeScript la form create pannuvom, HTML la connect pannuvom. Validators = required, email, minLength, min, max built-in irukku. Custom validator ezhudhalaam. Form submit panna invalid aana button disable pannuvom. formGroup.value = all input values object aa varum.</div>
+  </div>
+</div>
+
+<!-- SECTION 9: RXJS -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <div class="num">9</div>
+    <h2>RxJS & Observables <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <h3>Observable — Async data streams</h3>
+      <p class="english">Observable is like a Promise but can emit multiple values over time. Used for HTTP, events, state. RxJS = Reactive Extensions for JavaScript.</p>
+      <div class="tanglish">Observable = Promise la difference ithanai thaan: Promise oru value return pannuvom, Observable multiple values emit pannuvom over time. HTTP call, timer, user events — ellaam Observable. subscribe() panna mattum data varum.</div>
+    </div>
+    <pre><span class="cmt">// Most used RxJS Operators</span>
+<span class="kw">import</span> { <span class="fn">map, filter, tap, switchMap, debounceTime,</span>
+         <span class="fn">distinctUntilChanged, catchError, takeUntil, forkJoin</span> } <span class="kw">from</span> <span class="str">'rxjs/operators'</span>;
+
+<span class="cmt">// map — data transform pannuvom (array.map mathiri)</span>
+<span class="kw">this</span>.http.<span class="fn">get</span>&lt;<span class="cls">ApiResponse</span>&gt;(<span class="str">'/students'</span>).<span class="fn">pipe</span>(
+  <span class="fn">map</span>(response => response.data),  <span class="cmt">// response.data extract pannuvom</span>
+  <span class="fn">tap</span>(data => console.<span class="fn">log</span>(data))   <span class="cmt">// Debug — data change panna vendaam</span>
+).<span class="fn">subscribe</span>(students => <span class="kw">this</span>.students = students);
+
+<span class="cmt">// switchMap — search autocomplete (cancel previous request)</span>
+searchControl.valueChanges.<span class="fn">pipe</span>(
+  <span class="fn">debounceTime</span>(<span class="val">300</span>),          <span class="cmt">// 300ms wait — every keypress la API call illai</span>
+  <span class="fn">distinctUntilChanged</span>(),     <span class="cmt">// Same value again type panna API call skip</span>
+  <span class="fn">switchMap</span>(term =>           <span class="cmt">// New search → old request cancel → new request</span>
+    <span class="kw">this</span>.studentService.<span class="fn">search</span>(term)
+  )
+).<span class="fn">subscribe</span>(results => <span class="kw">this</span>.results = results);
+
+<span class="cmt">// forkJoin — Multiple API calls parallel (all complete aana callback)</span>
+<span class="fn">forkJoin</span>({
+  students: <span class="kw">this</span>.studentService.<span class="fn">getAll</span>(),
+  courses:  <span class="kw">this</span>.courseService.<span class="fn">getAll</span>()
+}).<span class="fn">subscribe</span>(({ students, courses }) => {
+  <span class="kw">this</span>.students = students;
+  <span class="kw">this</span>.courses = courses;
+});
+
+<span class="cmt">// BehaviorSubject — Shared state (login status, cart count etc)</span>
+<span class="kw">private</span> isLoggedInSubject = <span class="kw">new</span> <span class="cls">BehaviorSubject</span>&lt;<span class="kw">boolean</span>&gt;(<span class="val">false</span>);
+isLoggedIn$ = <span class="kw">this</span>.isLoggedInSubject.<span class="fn">asObservable</span>(); <span class="cmt">// Public read-only</span>
+<span class="kw">this</span>.isLoggedInSubject.<span class="fn">next</span>(<span class="val">true</span>); <span class="cmt">// Update pannuvom</span></pre>
+    <div class="tanglish">debounceTime(300) = user type panna 300ms wait panni then API call — har key press la API call pannama. switchMap = old request cancel pannuvom new one start — search la important. BehaviorSubject = current value store panni new subscribers ku immediately emit pannuvom.</div>
+
+    <div class="qa-card">
+      <div class="qa-q">switchMap vs mergeMap vs concatMap — difference?</div>
+      <div class="qa-a">
+        <strong>switchMap:</strong> New value varum pothu previous Observable cancel. (Search — user new letter type panna old search cancel)<br>
+        <strong>mergeMap:</strong> All Observables parallel run. Cancel panna mattom. (Multiple independent API calls)<br>
+        <strong>concatMap:</strong> One by one, queue la. Previous complete aana next start. (Order important operations)
+      </div>
+      <div class="qa-t">switchMap = search box la use pannuvom — new type panna old request cancel. mergeMap = parallel calls. concatMap = one by one — payments, ordered operations ku use pannuvom.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 10: PIPES -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <div class="num">10</div>
+    <h2>Pipes — Data Transform <span class="level l1">Basics</span></h2>
+  </div>
+  <div class="section-body">
+    <pre><span class="cmt">&lt;!-- Built-in Pipes --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ name | <span class="fn">uppercase</span> }}<span class="tag">&lt;/p&gt;</span>              <span class="cmt">&lt;!-- GURUMOORTHY --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ name | <span class="fn">lowercase</span> }}<span class="tag">&lt;/p&gt;</span>              <span class="cmt">&lt;!-- gurumoorthy --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ fee | <span class="fn">currency</span>:<span class="str">'INR'</span>:<span class="str">'symbol'</span> }}<span class="tag">&lt;/p&gt;</span>  <span class="cmt">&lt;!-- ₹5,000.00 --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ date | <span class="fn">date</span>:<span class="str">'dd/MM/yyyy'</span> }}<span class="tag">&lt;/p&gt;</span>      <span class="cmt">&lt;!-- 27/06/2026 --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ 3.14159 | <span class="fn">number</span>:<span class="str">'1.2-2'</span> }}<span class="tag">&lt;/p&gt;</span>     <span class="cmt">&lt;!-- 3.14 --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ data | <span class="fn">json</span> }}<span class="tag">&lt;/p&gt;</span>                  <span class="cmt">&lt;!-- Debug JSON display --&gt;</span>
+<span class="tag">&lt;p&gt;</span>{{ longText | <span class="fn">slice</span>:0:50 }}<span class="tag">&lt;/p&gt;</span>        <span class="cmt">&lt;!-- First 50 chars --&gt;</span>
+
+<span class="cmt">// Custom Pipe — Search filter</span>
+<span class="dec">@Pipe</span>({ name: <span class="str">'searchFilter'</span>, standalone: <span class="val">true</span> })
+<span class="kw">export class</span> <span class="cls">SearchFilterPipe</span> <span class="kw">implements</span> <span class="cls">PipeTransform</span> {
+  <span class="fn">transform</span>(students: <span class="cls">Student</span>[], search: <span class="kw">string</span>): <span class="cls">Student</span>[] {
+    <span class="kw">if</span> (!search) <span class="kw">return</span> students;
+    <span class="kw">return</span> students.<span class="fn">filter</span>(s =>
+      s.name.<span class="fn">toLowerCase</span>().<span class="fn">includes</span>(search.<span class="fn">toLowerCase</span>())
+    );
+  }
+}
+<span class="cmt">&lt;!-- Use pannuvom: --&gt;</span>
+<span class="tag">&lt;tr</span> <span class="bind">*ngFor</span><span class="attr">="let s of students | searchFilter:searchText"</span><span class="tag">&gt;</span></pre>
+    <div class="tanglish">Pipe = data display panna format change pannuvom — original data change aagaathu. currency pipe = ₹ format. date pipe = readable date. Custom pipe ezhudhi search filter pannalam. | symbol use pannuvom.</div>
+  </div>
+</div>
+
+<!-- SECTION 11: LIFECYCLE HOOKS -->
+<div class="section" id="s11">
+  <div class="section-header">
+    <div class="num">11</div>
+    <h2>Lifecycle Hooks <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <pre><span class="kw">export class</span> <span class="cls">MyComponent</span> <span class="kw">implements</span> <span class="cls">OnInit</span>, <span class="cls">OnDestroy</span>, <span class="cls">OnChanges</span> {
+
+  <span class="cmt">// 1. constructor — Angular DI inject panna first call</span>
+  <span class="cmt">// API calls panna vendaam — too early</span>
+  <span class="fn">constructor</span>(<span class="kw">private</span> service: <span class="cls">StudentService</span>) {}
+
+  <span class="cmt">// 2. ngOnChanges — @Input values change aagum pothu call aagum</span>
+  <span class="fn">ngOnChanges</span>(changes: <span class="cls">SimpleChanges</span>) {
+    <span class="kw">if</span> (changes[<span class="str">'studentId'</span>]) {
+      <span class="kw">this</span>.<span class="fn">loadStudent</span>(<span class="kw">this</span>.studentId); <span class="cmt">// New ID varum pothu reload</span>
+    }
+  }
+
+  <span class="cmt">// 3. ngOnInit — Component ready! API calls, data load here</span>
+  <span class="fn">ngOnInit</span>() {
+    <span class="kw">this</span>.<span class="fn">loadData</span>();  <span class="cmt">// ✅ Best place for API calls</span>
+  }
+
+  <span class="cmt">// 4. ngAfterViewInit — DOM render complete, ViewChild available</span>
+  <span class="fn">ngAfterViewInit</span>() {
+    <span class="cmt">// chart.js, video player initialize — DOM need pandra libraries</span>
+  }
+
+  <span class="cmt">// 5. ngOnDestroy — Component remove aagum pothu cleanup</span>
+  <span class="fn">ngOnDestroy</span>() {
+    <span class="kw">this</span>.subscription?.<span class="fn">unsubscribe</span>();  <span class="cmt">// Memory leak prevent!</span>
+    <span class="kw">this</span>.signalRService.<span class="fn">stopConnection</span>();
+  }
+}</pre>
+    <div class="tanglish">ngOnInit = component ready aana call aagum — API calls idhe podu. ngOnDestroy = component destroy aagum pothu — subscriptions unsubscribe panna marandha memory leak varum! Interview la memory leak question kepalanga.</div>
+
+    <div class="qa-card">
+      <div class="qa-q">Constructor vs ngOnInit — which to use for API calls?</div>
+      <div class="qa-a">
+        Always use <strong>ngOnInit</strong> for API calls, not constructor.<br>
+        Constructor = DI (Dependency Injection) only. Angular hasn't fully initialized the component yet — @Input values not available.<br>
+        ngOnInit = Component fully initialized, @Input values received, DOM ready to use.
+      </div>
+      <div class="qa-t">Constructor la @Input values illai — Angular inject panna aachu but initialization illai. ngOnInit la @Input ready, DOM ready, safe aa API call pannum. Interview la itha direct kepalanga!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 12: GUARDS -->
+<div class="section" id="s12">
+  <div class="section-header">
+    <div class="num">12</div>
+    <h2>Guards — Route Protection <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <pre><span class="cmt">// auth.guard.ts — Functional Guard (Angular 14+)</span>
+<span class="kw">import</span> { <span class="fn">inject</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { <span class="fn">CanActivateFn</span>, <span class="cls">Router</span> } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+<span class="kw">import</span> { <span class="cls">AuthService</span> } <span class="kw">from</span> <span class="str">'../services/auth'</span>;
+
+<span class="kw">export const</span> <span class="fn">authGuard</span>: <span class="cls">CanActivateFn</span> = (route, state) => {
+  <span class="kw">const</span> authService = <span class="fn">inject</span>(<span class="cls">AuthService</span>);
+  <span class="kw">const</span> router = <span class="fn">inject</span>(<span class="cls">Router</span>);
+
+  <span class="kw">if</span> (authService.<span class="fn">hasToken</span>()) {
+    <span class="kw">return true</span>;  <span class="cmt">// ✅ Access allowed</span>
+  }
+
+  <span class="cmt">// Login page ku redirect pannuvom</span>
+  router.<span class="fn">navigate</span>([<span class="str">'/login'</span>], {
+    queryParams: { returnUrl: state.url }  <span class="cmt">// Login aana redirect back</span>
+  });
+  <span class="kw">return false</span>;  <span class="cmt">// ❌ Access denied</span>
+};
+
+<span class="cmt">// Role-based guard</span>
+<span class="kw">export const</span> <span class="fn">adminGuard</span>: <span class="cls">CanActivateFn</span> = () => {
+  <span class="kw">const</span> auth = <span class="fn">inject</span>(<span class="cls">AuthService</span>);
+  <span class="kw">return</span> auth.<span class="fn">isAdmin</span>() ? <span class="val">true</span> : <span class="kw">inject</span>(<span class="cls">Router</span>).<span class="fn">createUrlTree</span>([<span class="str">'/forbidden'</span>]);
+};
+
+<span class="cmt">// Routes la use pannuvom</span>
+{ path: <span class="str">'dashboard'</span>, component: <span class="cls">DashboardComponent</span>, canActivate: [<span class="fn">authGuard</span>] },
+{ path: <span class="str">'admin'</span>,     component: <span class="cls">AdminComponent</span>,     canActivate: [<span class="fn">authGuard</span>, <span class="fn">adminGuard</span>] }</pre>
+    <div class="tanglish">Guard = route access panna before check pannuvom. authGuard = token irukka check → illana login redirect. adminGuard = Admin role check. Multiple guards possible — ellaam pass aana thaan route access. .NET la [Authorize] attribute mathiri concept.</div>
+  </div>
+</div>
+
+<!-- SECTION 13: INTERCEPTORS -->
+<div class="section" id="s13">
+  <div class="section-header">
+    <div class="num">13</div>
+    <h2>Interceptors — HTTP Middleware <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <p class="english">Interceptors sit between every HTTP request/response. Use for: attach JWT token, global error handling, loading spinner, logging.</p>
+      <div class="tanglish">.NET la Middleware mathiri — har HTTP request/response la intercept pannuvom. JWT token attach, 401 handle, loading spinner show/hide — centralized location la pannuvom. Har component la panna vendaam.</div>
+    </div>
+    <pre><span class="cmt">// jwt-interceptor.ts — Our project la irukku</span>
+<span class="kw">export const</span> <span class="fn">jwtInterceptor</span>: <span class="cls">HttpInterceptorFn</span> = (req, next) => {
+  <span class="kw">const</span> token = <span class="fn">inject</span>(<span class="cls">AuthService</span>).<span class="fn">getToken</span>();
+
+  <span class="cmt">// Token attach pannuvom</span>
+  <span class="kw">const</span> authReq = token
+    ? req.<span class="fn">clone</span>({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : req;
+
+  <span class="kw">return</span> <span class="fn">next</span>(authReq).<span class="fn">pipe</span>(
+    <span class="fn">catchError</span>((error: <span class="cls">HttpErrorResponse</span>) => {
+      <span class="kw">if</span> (error.status === <span class="val">401</span>) {
+        <span class="cmt">// Auto refresh token</span>
+      }
+      <span class="kw">return</span> <span class="fn">throwError</span>(() => error);
+    })
+  );
+};
+
+<span class="cmt">// Loading interceptor — all requests la spinner show</span>
+<span class="kw">export const</span> <span class="fn">loadingInterceptor</span>: <span class="cls">HttpInterceptorFn</span> = (req, next) => {
+  <span class="kw">const</span> loading = <span class="fn">inject</span>(<span class="cls">LoadingService</span>);
+  loading.<span class="fn">show</span>();
+  <span class="kw">return</span> <span class="fn">next</span>(req).<span class="fn">pipe</span>(
+    <span class="fn">finalize</span>(() => loading.<span class="fn">hide</span>())  <span class="cmt">// Success or error — hide pannuvom</span>
+  );
+};
+
+<span class="cmt">// app.config.ts la register pannuvom</span>
+<span class="fn">provideHttpClient</span>(<span class="fn">withInterceptors</span>([<span class="fn">jwtInterceptor</span>, <span class="fn">loadingInterceptor</span>]))</pre>
+  </div>
+</div>
+
+<!-- SECTION 14: STANDALONE -->
+<div class="section" id="s14">
+  <div class="section-header">
+    <div class="num">14</div>
+    <h2>Standalone Components (Angular 14+) <span class="level l2">Intermediate</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="compare">
+      <div class="compare-box">
+        <h4>✅ Standalone (Modern, Angular 14+)</h4>
+        <pre style="font-size:0.78em;padding:8px"><span class="dec">@Component</span>({
+  standalone: <span class="val">true</span>,
+  imports: [
+    <span class="cls">CommonModule</span>,
+    <span class="cls">ReactiveFormsModule</span>,
+    <span class="cls">RouterLink</span>,
+    <span class="cls">StudentCardComponent</span>
+  ],
+  ...
+})</pre>
+      </div>
+      <div class="compare-box bad">
+        <h4>Old NgModule way</h4>
+        <pre style="font-size:0.78em;padding:8px"><span class="dec">@NgModule</span>({
+  declarations: [
+    <span class="cls">AppComponent</span>,
+    <span class="cls">StudentComponent</span>
+  ],
+  imports: [
+    <span class="cls">BrowserModule</span>,
+    <span class="cls">HttpClientModule</span>
+  ]
+})</pre>
+      </div>
+    </div>
+    <div class="tanglish">Old Angular la NgModule vendam — centralized module la har component register pannanum. Modern Angular (14+) la standalone: true = each component self-contained. Imports array la direct component, directive, pipe add pannuvom. Our project la standalone use panrom!</div>
+  </div>
+</div>
+
+<!-- SECTION 15: SIGNALS -->
+<div class="section" id="s15">
+  <div class="section-header">
+    <div class="num">15</div>
+    <h2>Signals (Angular 17+) — Modern State Management <span class="level l3">Advanced</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <p class="english">Signals are Angular's new reactive primitive — simpler than RxJS for component state. No subscribe(), no memory leaks, auto-tracks dependencies.</p>
+      <div class="tanglish">Signals = new way to manage state. BehaviorSubject mathiri but simpler. subscribe() vendaam, unsubscribe() vendaam — automatic. Angular 17+ projects la signals use pannuvanga.</div>
+    </div>
+    <pre><span class="kw">import</span> { <span class="fn">signal, computed, effect</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="cls">CounterComponent</span> {
+
+  <span class="cmt">// signal() — writable reactive value</span>
+  count = <span class="fn">signal</span>(<span class="val">0</span>);
+  name  = <span class="fn">signal</span>(<span class="str">'Guru'</span>);
+
+  <span class="cmt">// computed() — auto-calculated, updates when dependencies change</span>
+  doubled = <span class="fn">computed</span>(() => <span class="kw">this</span>.count() * <span class="val">2</span>);
+  greeting = <span class="fn">computed</span>(() => `Hello ${<span class="kw">this</span>.name()}!`);
+
+  <span class="cmt">// effect() — side effects when signal changes</span>
+  <span class="fn">constructor</span>() {
+    <span class="fn">effect</span>(() => {
+      console.<span class="fn">log</span>(<span class="str">'Count changed to:'</span>, <span class="kw">this</span>.count());
+    });
+  }
+
+  <span class="fn">increment</span>() { <span class="kw">this</span>.count.<span class="fn">update</span>(v => v + <span class="val">1</span>); }
+  <span class="fn">setName</span>(n: <span class="kw">string</span>) { <span class="kw">this</span>.name.<span class="fn">set</span>(n); }
+}
+
+<span class="cmt">&lt;!-- Template la use pannuvom — signal() call panna value varum --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Count: {{ count() }}<span class="tag">&lt;/p&gt;</span>         <span class="cmt">&lt;!-- Note: () call panna vendiyathu --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Doubled: {{ doubled() }}<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;button</span> <span class="bind">(click)</span><span class="attr">="increment()"</span><span class="tag">&gt;</span>+1<span class="tag">&lt;/button&gt;</span></pre>
+  </div>
+</div>
+
+<!-- SECTION 16: .NET INTEGRATION -->
+<div class="section" id="s16">
+  <div class="section-header">
+    <div class="num">16</div>
+    <h2>.NET + Angular Integration <span class="level l3">Advanced</span></h2>
+  </div>
+  <div class="section-body">
+    <div class="concept">
+      <h3>Full Stack Architecture</h3>
+    </div>
+    <pre><span class="cmt">// .NET Backend (port 5260) + Angular Frontend (port 4200)</span>
+<span class="cmt">// Communication: REST API + SignalR WebSocket</span>
+
+<span class="cmt">// 1. CORS — Backend la Angular ku allow pannuvom</span>
+builder.Services.<span class="fn">AddCors</span>(options =>
+  options.<span class="fn">AddPolicy</span>(<span class="str">"AllowAngular"</span>, policy =>
+    policy.<span class="fn">WithOrigins</span>(<span class="str">"http://localhost:4200"</span>)
+          .<span class="fn">AllowAnyHeader</span>().<span class="fn">AllowAnyMethod</span>().<span class="fn">AllowCredentials</span>()));
+
+<span class="cmt">// 2. Angular environment files — API URL configure pannuvom</span>
+<span class="cmt">// environment.ts (development)</span>
+<span class="kw">export const</span> environment = {
+  production: <span class="val">false</span>,
+  apiUrl: <span class="str">'http://localhost:5260'</span>
+};
+<span class="cmt">// environment.prod.ts</span>
+<span class="kw">export const</span> environment = {
+  production: <span class="val">true</span>,
+  apiUrl: <span class="str">'https://your-api.azurewebsites.net'</span>
+};
+
+<span class="cmt">// 3. JWT Flow</span>
+<span class="cmt">// Login → .NET JWT create → Angular localStorage store</span>
+<span class="cmt">// Every API call → Interceptor Bearer token attach</span>
+<span class="cmt">// 401 → Refresh token call → Retry</span>
+
+<span class="cmt">// 4. SignalR — Real-time</span>
+<span class="cmt">// Angular HubConnectionBuilder → .NET MapHub</span>
+<span class="cmt">// Server broadcast → Angular subscription update</span></pre>
+    <div class="tanglish">Our project la exact itha use panrom! .NET API port 5260, Angular port 4200. CORS = different ports aam padiyal browser block pannuvom — AllowAngular policy add pannuvom. JWT = login aana localStorage store, har request la interceptor attach. SignalR = real-time data WebSocket through.</div>
+  </div>
+</div>
+
+<!-- SECTION 17: INTERVIEW Q&A -->
+<div class="section" id="s17">
+  <div class="section-header">
+    <div class="num">17</div>
+    <h2>Top 50 Interview Q&A — .NET + Angular Position</h2>
+  </div>
+  <div class="section-body">
+
+    <h3 style="color:#dd0031;margin:16px 0 12px">🔥 MOST FREQUENTLY ASKED</h3>
+
+    <div class="qa-card">
+      <div class="qa-q">What is Angular? SPA என்ன?</div>
+      <div class="qa-a">Angular is a <strong>TypeScript-based front-end framework by Google</strong> for building Single Page Applications. SPA = one HTML page, routing via JavaScript, no full page reload — faster user experience.</div>
+      <div class="qa-t">Google TypeScript framework. SPA = oru page thaan, URL maarina content JavaScript replace pannuvom — full reload illai. Gmail, YouTube எல்லாம் SPA!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Angular vs AngularJS difference?</div>
+      <div class="qa-a">AngularJS (1.x) = Old, JavaScript, MVC pattern. Angular (2+) = Complete rewrite, TypeScript, Component-based, better performance. They're completely different frameworks — Angular is NOT AngularJS upgraded.</div>
+      <div class="qa-t">AngularJS = old JavaScript, 2010. Angular = TypeScript, 2016, completely different. Interview la confuse pannidhathe — completely rewritten!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Component lifecycle order என்ன?</div>
+      <div class="qa-a">constructor → ngOnChanges → ngOnInit → ngDoCheck → ngAfterContentInit → ngAfterContentChecked → ngAfterViewInit → ngAfterViewChecked → ngOnDestroy<br><br>Most important: <strong>constructor (DI only), ngOnInit (API calls), ngOnDestroy (cleanup)</strong></div>
+      <div class="qa-t">3 important ones: constructor = DI only. ngOnInit = API calls, data load. ngOnDestroy = unsubscribe, cleanup. Matha ellam adupu varathu!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Memory leak Angular la epdi varum? Epdi prevent pannuvom?</div>
+      <div class="qa-a">
+        Memory leak = Observable subscribe pannuvom but component destroy aana unsubscribe illama → memory holds the subscription forever.<br>
+        <strong>Solutions:</strong><br>
+        1. <code>ngOnDestroy()</code> la <code>subscription.unsubscribe()</code><br>
+        2. <code>takeUntil(this.destroy$)</code> operator<br>
+        3. <code>async</code> pipe (auto unsubscribe!)<br>
+        4. Signals use pannuvom (no subscribe needed)
+      </div>
+      <div class="qa-t">Subscribe pannitu unsubscribe panna marandha memory leak! async pipe use pannuvom = auto unsubscribe. ngOnDestroy la manual unsubscribe panna vendiyathu. Interview la ivvalavum matter aana question!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">async pipe என்ன? Why is it better?</div>
+      <div class="qa-a">
+        <code>{{ students$ | async }}</code> — automatically subscribes to Observable and unsubscribes when component destroys. No manual subscription management needed. Cleaner code.
+      </div>
+      <div class="qa-t">async pipe = subscribe + unsubscribe automatic! Component destroy aana auto unsubscribe = memory leak illai. Best practice — Observable la subscribe pannuradha vida async pipe use pannuvom.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Change Detection என்ன? OnPush strategy என்ன?</div>
+      <div class="qa-a">Angular checks component tree for changes on every event/timer/HTTP. <strong>Default</strong> = checks entire tree (slow for large apps). <strong>OnPush</strong> = only checks when @Input reference changes, Observable emits, or manual trigger — <strong>much faster</strong>.</div>
+      <div class="qa-t">Default = Angular har event la entire tree check pannuvom = slow. OnPush = @Input change or manual trigger aana check pannuvom = fast. Performance critical apps la OnPush use pannuvom.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Lazy Loading epdi implement pannuvom?</div>
+      <div class="qa-a"><code>loadComponent: () => import('./dashboard.component').then(m => m.DashboardComponent)</code><br>This creates a separate JS bundle for the route — downloaded only when user navigates there. Reduces initial bundle size.</div>
+      <div class="qa-t">loadComponent + dynamic import = separate JS file per route = initial download fast. User navigate panna pothu thaan download. Real projects la mandatory!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Observable vs Promise difference?</div>
+      <div class="qa-a">
+        <strong>Promise:</strong> One value, eager (starts immediately), not cancellable<br>
+        <strong>Observable:</strong> Multiple values over time, lazy (starts on subscribe), cancellable, many operators (map, filter, switchMap...)<br>
+        Angular HttpClient returns Observable — cancel possible (unsubscribe).
+      </div>
+      <div class="qa-t">Promise = oru value, cancel panna mudiyathu. Observable = multiple values, cancel possible (unsubscribe), operators many. Angular la Observable everywhere use pannuvom.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">ViewChild and ContentChild என்ன?</div>
+      <div class="qa-a">
+        <strong>@ViewChild:</strong> Access DOM element or child component from same component's template. Available in ngAfterViewInit.<br>
+        <strong>@ContentChild:</strong> Access projected content (ng-content). Available in ngAfterContentInit.
+      </div>
+      <div class="qa-t">ViewChild = same component template la irukura element/component access. ContentChild = ng-content through projected content access. ngAfterViewInit la use pannuvom.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">ng-content என்ன? (Content Projection)</div>
+      <div class="qa-a">Like React's <code>children</code>. Pass HTML content into a component from outside. Used for reusable container components (cards, modals, tabs).</div>
+      <div class="qa-t">Reusable component create panna — parent la HTML pass pannuvom, child la ng-content la show aagum. Card component, modal component mathiri reusable containers create pannuvom.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">CORS error enna? How to fix?</div>
+      <div class="qa-a">Browser security policy — blocks requests from different origins (different port/domain). Fix: <strong>Backend la CORS configure pannuvom</strong> — never fix in Angular/browser. Our .NET project la <code>AllowAngular</code> policy add pannrom.</div>
+      <div class="qa-t">CORS = browser security — different port/domain request block pannuvom. Fix = Backend la allow pannuvom. Angular la fix panna mudiyathu — .NET la AddCors, UseCors pannuvom. Frontend change panna CORS fix aagaathu!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">JWT Authentication Angular la epdi implement pannuvom?</div>
+      <div class="qa-a">1. Login → API call → JWT token receive → localStorage store<br>2. Interceptor → Every request la Bearer token attach<br>3. Guard → Route access before token check<br>4. 401 → Interceptor catch → Refresh token call → Retry<br>Our project la exact implementation irukku!</div>
+      <div class="qa-t">Login → token store → Interceptor attach → Guard protect → 401 aana refresh. Our DotNetMinimalAPI-Angular project la full implementation irukku — demonstrate pannalaam!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Reactive Forms vs Template-driven — when to use?</div>
+      <div class="qa-a">
+        <strong>Use Reactive Forms when:</strong> Complex validation, dynamic form fields, unit testing needed, large forms.<br>
+        <strong>Use Template-driven when:</strong> Simple forms, rapid prototyping, small forms with basic validation.
+      </div>
+      <div class="qa-t">Real projects la mostly Reactive Forms use pannuvom — testable, complex validations handle pannalam. Template-driven = simple contact form mathiri basic use case only.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">SignalR Angular la epdi use pannuvom?</div>
+      <div class="qa-a"><code>@microsoft/signalr</code> package. HubConnectionBuilder → connect → on() for server events → invoke() for client-to-server. JWT token = <code>accessTokenFactory</code> → sent as query param (WebSocket can't send headers). Our DashboardHub exact implementation irukku.</div>
+      <div class="qa-t">SignalR = real-time WebSocket. JWT token query string la send pannuvom (header send panna mudiyathu WebSocket la). Server stats broadcast pannuvom, Angular subscribe panni update pannuvom — our project la see pannalam!</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What is tree shaking?</div>
+      <div class="qa-a">Build process removes unused code from final bundle. Angular CLI (webpack/esbuild) automatically does this. <code>providedIn: 'root'</code> services are tree-shakeable — if never injected, removed from bundle.</div>
+      <div class="qa-t">Build panna pothu use panna code mattum bundle la varum — unused code remove pannuvom = small bundle = fast load. providedIn: 'root' services inject pannala = tree shaking la remove aagum.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Angular performance optimization techniques?</div>
+      <div class="qa-a">
+        1. Lazy loading routes<br>
+        2. OnPush change detection<br>
+        3. trackBy in *ngFor<br>
+        4. async pipe (auto unsubscribe)<br>
+        5. Virtual scrolling for large lists<br>
+        6. Signals instead of BehaviorSubject<br>
+        7. AOT compilation (default in production)
+      </div>
+      <div class="qa-t">Lazy load + OnPush + trackBy = top 3. async pipe = memory leak prevent. Large list = Virtual scroll use pannuvom (only visible items render). Interview la ethavathu 4-5 sollavum.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What are Signals vs RxJS?</div>
+      <div class="qa-a">
+        <strong>Signals:</strong> Simpler syntax, no subscribe/unsubscribe, built into Angular, for component state.<br>
+        <strong>RxJS:</strong> Powerful operators (switchMap, debounce), for complex async flows, HTTP calls, event streams.<br>
+        Use both! Signals for state, RxJS for HTTP and complex streams.
+      </div>
+      <div class="qa-t">Signals = simple, no subscribe, Angular built-in. RxJS = powerful operators, HTTP, complex flows. Replace panna illai — use both. Signals for component state, RxJS for API calls and streams.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">How do you handle errors globally in Angular?</div>
+      <div class="qa-a">
+        1. HTTP errors → <strong>Interceptor</strong> la catchError<br>
+        2. Unhandled errors → <strong>ErrorHandler</strong> class implement<br>
+        3. Observable errors → <strong>catchError</strong> operator<br>
+        4. Route errors → <strong>errorHandler</strong> in Router config
+      </div>
+      <div class="qa-t">Global error = Interceptor la handle pannuvom. Component specific = catchError. Unhandled runtime errors = ErrorHandler implement pannuvom. Log service la send pannuvom production la.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">What is AOT vs JIT compilation?</div>
+      <div class="qa-a">
+        <strong>JIT (Just-in-Time):</strong> Angular compiles templates in browser at runtime. Slower startup, larger bundle. (Dev mode default old days)<br>
+        <strong>AOT (Ahead-of-Time):</strong> Templates compiled at build time. Faster startup, smaller bundle, catches template errors early. (Production default, now dev too)
+      </div>
+      <div class="qa-t">AOT = build panna pothu compile aagum = browser la fast. JIT = browser la runtime compile = slow. `ng build --prod` la AOT automatic. Template errors build time la catch aagum = production la error illai.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">.NET API integrate panna pothu common issues?</div>
+      <div class="qa-a">
+        1. CORS error → Backend AllowCors configure<br>
+        2. HTTPS/HTTP mismatch → Match protocols<br>
+        3. JWT 401 → Token expired, interceptor refresh<br>
+        4. SignalR disconnect → JWT query param not configured<br>
+        5. Date format mismatch → ISO 8601 both sides<br>
+        6. Null handling → Optional chaining (?.) in Angular
+      </div>
+      <div class="qa-t">Real experience irukku — CORS, HTTP mismatch, JWT, SignalR JWT query param, date format. Our project la ellam fix pannrom! Interviewer ku "experience based" ah sollavum.</div>
+    </div>
+
+    <h3 style="color:#dd0031;margin:20px 0 12px">💡 LIVE CODING QUESTIONS (Be ready to write)</h3>
+
+    <div class="qa-card">
+      <div class="qa-q">Simple counter component ezhuthu?</div>
+      <div class="qa-a">
+<pre style="font-size:0.82em">@Component({
+  standalone: true, selector: 'app-counter',
+  template: `
+    &lt;button (click)="decrement()"&gt;-&lt;/button&gt;
+    &lt;span&gt;{{ count }}&lt;/span&gt;
+    &lt;button (click)="increment()"&gt;+&lt;/button&gt;
+  `
+})
+export class CounterComponent {
+  count = 0;
+  increment() { this.count++; }
+  decrement() { this.count--; }
+}</pre>
+      </div>
+      <div class="qa-t">Simple component — Signals kooda ezhudhalaam: count = signal(0); increment() { this.count.update(v => v+1); } Template la {{ count() }}.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Search with debounce ezhuthu?</div>
+      <div class="qa-a">
+<pre style="font-size:0.82em">searchControl = new FormControl('');
+results$ = this.searchControl.valueChanges.pipe(
+  debounceTime(300),
+  distinctUntilChanged(),
+  switchMap(term => this.api.search(term ?? ''))
+);
+// Template:
+// &lt;input [formControl]="searchControl"&gt;
+// &lt;div *ngFor="let r of results$ | async"&gt;{{ r.name }}&lt;/div&gt;</pre>
+      </div>
+      <div class="qa-t">debounceTime(300) = 300ms wait, distinctUntilChanged = same value skip, switchMap = old cancel new start. async pipe = auto subscribe/unsubscribe. Classic Angular pattern!</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  <p>📝 Angular Interview Complete Guide | Gurumoorthy M | 2026</p>
+  <p style="margin-top:8px">GitHub: <strong>DotNetMinimalAPI-Angular</strong> — Live project demonstrate pannalaam!</p>
+  <p style="margin-top:4px;color:#3d444d">Key strength: "I have a working .NET 9 + Angular 17 project with JWT, SignalR, Refresh tokens, Guards, Interceptors — all implemented!"</p>
+</div>
+
+</body>
+</html>

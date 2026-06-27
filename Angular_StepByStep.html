@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angular — Scratch la irunthu API Connect varai | Gurumoorthy</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',sans-serif; background:#0d1117; color:#e6edf3; line-height:1.8; }
+
+.hero { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); padding:50px 30px; text-align:center; border-bottom:3px solid #dd0031; }
+.hero h1 { font-size:2.5em; color:#fff; margin-bottom:10px; }
+.hero p { color:#8b949e; font-size:1.1em; }
+.hero .tag { display:inline-block; background:#dd0031; color:#fff; padding:4px 14px; border-radius:20px; font-size:0.85em; margin:4px; }
+
+/* Steps */
+.step { margin:30px 20px; background:#161b22; border:1px solid #30363d; border-radius:14px; overflow:hidden; }
+.step-header { padding:20px 26px; display:flex; align-items:center; gap:16px; border-bottom:1px solid #30363d; cursor:pointer; }
+.step-num { background:#dd0031; color:#fff; width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3em; font-weight:bold; flex-shrink:0; }
+.step-title { font-size:1.25em; color:#f0f6fc; font-weight:600; }
+.step-sub { color:#8b949e; font-size:0.9em; margin-top:2px; }
+.step-body { padding:26px; }
+
+/* Code blocks */
+pre { background:#010409; border:1px solid #30363d; border-radius:8px; padding:18px; overflow-x:auto; font-size:0.88em; line-height:1.7; margin:12px 0; position:relative; }
+.cmd { background:#0d1b0d; border:1px solid #2ea043; border-radius:8px; padding:16px; font-family:monospace; font-size:0.92em; color:#7ee787; margin:12px 0; }
+.cmd::before { content:"$ "; color:#58a6ff; font-weight:bold; }
+.cmd-block { background:#0d1b0d; border:1px solid #2ea043; border-radius:8px; padding:16px; font-family:monospace; font-size:0.88em; color:#7ee787; margin:12px 0; }
+.cmd-line { display:block; margin:2px 0; }
+.cmd-line::before { content:"$ "; color:#58a6ff; }
+.cmd-comment { color:#6e7681; font-style:italic; display:block; margin:6px 0 2px; }
+.cmd-comment::before { content:"# "; color:#6e7681; }
+
+/* Syntax colors */
+.kw { color:#ff7b72; }
+.cls { color:#ffa657; }
+.str { color:#a5d6ff; }
+.cmt { color:#8b949e; font-style:italic; }
+.dec { color:#d2a8ff; }
+.fn { color:#79c0ff; }
+.val { color:#79c0ff; }
+.tag { color:#7ee787; }
+.attr { color:#ffa657; }
+.bind { color:#f2cc60; }
+.prop { color:#e6edf3; }
+
+/* Explanation boxes */
+.tanglish { background:#0d2818; border:1px solid #2ea043; border-left:4px solid #2ea043; border-radius:8px; padding:14px 18px; color:#7ee787; font-size:0.92em; margin:12px 0; }
+.tanglish::before { content:"🗣️ Tanglish Explanation: "; font-weight:bold; color:#3fb950; }
+.note { background:#1a2332; border:1px solid #1f6feb; border-radius:8px; padding:12px 16px; color:#79c0ff; font-size:0.9em; margin:10px 0; }
+.note::before { content:"📌 Note: "; font-weight:bold; }
+.warn { background:#2d2005; border:1px solid #9e6a03; border-radius:8px; padding:12px 16px; color:#e3b341; font-size:0.9em; margin:10px 0; }
+.warn::before { content:"⚠️ Important: "; font-weight:bold; }
+.success { background:#0d2818; border:1px solid #2ea043; border-radius:8px; padding:12px 16px; color:#3fb950; font-size:0.9em; margin:10px 0; }
+.success::before { content:"✅ Result: "; font-weight:bold; }
+
+/* File tree */
+.tree { background:#010409; border:1px solid #30363d; border-radius:8px; padding:16px; font-family:monospace; font-size:0.88em; line-height:1.9; margin:12px 0; }
+.tree .folder { color:#79c0ff; }
+.tree .file { color:#adbac7; }
+.tree .imp { color:#f2cc60; font-weight:bold; }
+.tree .new { color:#3fb950; }
+
+/* Comparison */
+.box2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:12px 0; }
+.box { background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:14px; }
+.box h4 { color:#58a6ff; margin-bottom:8px; font-size:0.95em; }
+
+/* Progress bar */
+.progress { display:flex; gap:0; margin:20px; flex-wrap:wrap; }
+.prog-item { flex:1; min-width:80px; padding:10px; text-align:center; border-bottom:3px solid #30363d; cursor:pointer; font-size:0.82em; color:#8b949e; }
+.prog-item.done { border-bottom-color:#2ea043; color:#3fb950; }
+.prog-item.active { border-bottom-color:#dd0031; color:#fff; font-weight:bold; }
+
+.section-label { background:#21262d; color:#8b949e; font-size:0.78em; padding:4px 14px; display:inline-block; border-radius:12px; margin-bottom:10px; }
+
+.img-placeholder { background:#21262d; border:2px dashed #30363d; border-radius:8px; padding:40px; text-align:center; color:#484f58; margin:12px 0; font-size:0.9em; }
+
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.9em; }
+th { background:#21262d; color:#f0f6fc; padding:10px 14px; text-align:left; border:1px solid #30363d; }
+td { padding:9px 14px; border:1px solid #21262d; color:#adbac7; }
+tr:hover td { background:#161b22; }
+
+.footer { text-align:center; padding:40px; color:#484f58; border-top:1px solid #21262d; margin-top:20px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>⚡ Angular — Scratch to API Connect</h1>
+  <p>Install → Create Project → Components → Services → API Call — Step by Step</p>
+  <div style="margin-top:14px">
+    <span class="tag">Absolute Beginner</span>
+    <span class="tag">Tamil+English</span>
+    <span class="tag">Hands-on</span>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress">
+  <div class="prog-item done">1. Install</div>
+  <div class="prog-item done">2. Create</div>
+  <div class="prog-item done">3. Structure</div>
+  <div class="prog-item done">4. Component</div>
+  <div class="prog-item done">5. Template</div>
+  <div class="prog-item done">6. Service</div>
+  <div class="prog-item done">7. API Connect</div>
+  <div class="prog-item done">8. Show Data</div>
+  <div class="prog-item done">9. Forms</div>
+  <div class="prog-item done">10. Routing</div>
+</div>
+
+<!-- ===== STEP 1: INSTALL ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div>
+      <div class="step-title">Install — Node.js & Angular CLI</div>
+      <div class="step-sub">Onnum install pannala irundha idhu first pannanum</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="section-label">STEP 1A — Node.js Install</div>
+    <p style="color:#adbac7;margin-bottom:10px">Angular run aaga Node.js vendam. Node.js = JavaScript server-side run panra platform. Angular CLI node package thaan.</p>
+
+    <div class="note">nodejs.org/en → Download "LTS" version (Long Term Support) → Install pannuvom. Version check panna:</div>
+    <div class="cmd">node --version</div>
+    <div class="cmd">npm --version</div>
+    <div class="success">v20.x.x and 10.x.x mathiri varum</div>
+
+    <div class="section-label" style="margin-top:20px">STEP 1B — Angular CLI Install</div>
+    <p style="color:#adbac7;margin-bottom:10px">CLI = Command Line Interface. Angular project create, component generate, build — ellam CLI through pannuvom.</p>
+    <div class="cmd">npm install -g @angular/cli</div>
+    <div class="cmd">ng version</div>
+    <div class="success">Angular CLI: 17.x.x varum</div>
+
+    <div class="tanglish">npm = Node Package Manager — JavaScript libraries install panna use pannuvom. -g = global install (oru system la everywhere use panlam). Angular CLI install aana "ng" command everywhere use panlam.</div>
+
+    <table>
+      <tr><th>Tool</th><th>En vendam?</th><th>Install command</th></tr>
+      <tr><td>Node.js</td><td>Angular run panna JavaScript runtime</td><td>nodejs.org download</td></tr>
+      <tr><td>npm</td><td>Packages download panna</td><td>Node.js kooda varum</td></tr>
+      <tr><td>Angular CLI</td><td>Project create, component generate</td><td>npm install -g @angular/cli</td></tr>
+      <tr><td>VS Code</td><td>Code editor</td><td>code.visualstudio.com</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ===== STEP 2: CREATE PROJECT ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div>
+      <div class="step-title">Angular Project Create Pannuvom</div>
+      <div class="step-sub">ng new command — project structure auto create aagum</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <p style="color:#adbac7;margin-bottom:10px">Terminal open pannuvom (VS Code la Ctrl+`) and type:</p>
+
+    <div class="cmd-block">
+      <span class="cmd-comment">Projects folder la navigate pannuvom</span>
+      <span class="cmd-line">cd C:\Projects</span>
+      <span class="cmd-comment">New Angular project create pannuvom</span>
+      <span class="cmd-line">ng new my-first-angular</span>
+    </div>
+
+    <p style="color:#adbac7;margin:14px 0 8px">CLI 3 questions kekkum:</p>
+    <pre><span class="cmt">? Which stylesheet format would you like to use?</span>
+  → <span class="str">CSS</span>   <span class="cmt">(Simple, SCSS advanced — CSS select pannuvom first)</span>
+
+<span class="cmt">? Do you want to enable Server-Side Rendering (SSR)?</span>
+  → <span class="str">N</span>     <span class="cmt">(No — basic project ku vendam)</span>
+
+<span class="cmt">? Do you want to add Angular routing?</span>
+  → <span class="str">Y</span>     <span class="cmt">(Yes — routes setup aagum)</span></pre>
+
+    <div class="cmd-block">
+      <span class="cmd-comment">Project folder enter pannuvom</span>
+      <span class="cmd-line">cd my-first-angular</span>
+      <span class="cmd-comment">VS Code open pannuvom</span>
+      <span class="cmd-line">code .</span>
+      <span class="cmd-comment">Development server start pannuvom</span>
+      <span class="cmd-line">ng serve</span>
+    </div>
+
+    <div class="success">Browser la http://localhost:4200 open pannuvom → Angular default page varum!</div>
+
+    <div class="tanglish">ng new = Angular project skeleton create pannuvom — folder structure, package.json, all config automatic. ng serve = development server start — file save panna auto-refresh aagum (Hot Module Replacement). .NET la dotnet run mathiri thaan ng serve!</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 3: PROJECT STRUCTURE ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div>
+      <div class="step-title">Project Structure — Enna Enna Irukku?</div>
+      <div class="step-sub">Har file enna panna use aagum — full explanation</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="tree">
+<span class="folder">my-first-angular/</span>
+├── <span class="folder">src/</span>                         <span class="cmt">← Source code ellam idhe</span>
+│   ├── <span class="folder">app/</span>                      <span class="cmt">← Main app folder</span>
+│   │   ├── <span class="imp">app.component.ts</span>      <span class="cmt">← Root component (TypeScript logic)</span>
+│   │   ├── <span class="imp">app.component.html</span>    <span class="cmt">← Root component HTML</span>
+│   │   ├── <span class="imp">app.component.css</span>     <span class="cmt">← Root component styles</span>
+│   │   ├── <span class="imp">app.routes.ts</span>         <span class="cmt">← Routing config (URL → component)</span>
+│   │   └── <span class="imp">app.config.ts</span>         <span class="cmt">← App-level configuration</span>
+│   ├── <span class="file">index.html</span>               <span class="cmt">← Single HTML file (SPA entry point)</span>
+│   ├── <span class="file">main.ts</span>                  <span class="cmt">← App bootstrap (start pannuvom)</span>
+│   └── <span class="file">styles.css</span>               <span class="cmt">← Global styles</span>
+├── <span class="file">angular.json</span>               <span class="cmt">← Angular CLI configuration</span>
+├── <span class="file">package.json</span>               <span class="cmt">← Dependencies list (npm packages)</span>
+└── <span class="file">tsconfig.json</span>              <span class="cmt">← TypeScript configuration</span>
+    </div>
+
+    <div class="tanglish">src/app/ = namma code ellam idhe. index.html = oru HTML file thaan (SPA!). app.component = root component — ellam idhu inside render aagum. app.routes.ts = URL kooda enna component show pannanum nu define pannuvom. package.json = csproj mathiri — dependencies list.</div>
+
+    <div class="section-label" style="margin-top:16px">Key files — Odhanay padikkanum</div>
+
+    <pre><span class="cmt">// main.ts — App start aagura entry point</span>
+<span class="kw">import</span> { bootstrapApplication } <span class="kw">from</span> <span class="str">'@angular/platform-browser'</span>;
+<span class="kw">import</span> { <span class="cls">AppComponent</span> } <span class="kw">from</span> <span class="str">'./app/app.component'</span>;
+<span class="kw">import</span> { appConfig } <span class="kw">from</span> <span class="str">'./app/app.config'</span>;
+
+bootstrapApplication(<span class="cls">AppComponent</span>, appConfig);
+<span class="cmt">// AppComponent = root component, appConfig = providers</span></pre>
+
+    <pre><span class="cmt">// index.html — Browser la load aagura single HTML</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;app-root&gt;&lt;/app-root&gt;</span>   <span class="cmt">&lt;!-- AppComponent idhe render aagum --&gt;</span>
+<span class="tag">&lt;/body&gt;</span></pre>
+
+  </div>
+</div>
+
+<!-- ===== STEP 4: FIRST COMPONENT ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div>
+      <div class="step-title">First Component Create Pannuvom</div>
+      <div class="step-sub">Component = Angular UI building block — har UI piece oru component</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <p style="color:#adbac7;margin-bottom:10px">Component generate panna CLI use pannuvom (manual ezhudha vendaam!):</p>
+    <div class="cmd">ng generate component students</div>
+    <div class="note">Shortcut: ng g c students</div>
+
+    <div class="success">src/app/students/ folder create aagum with 3 files!</div>
+
+    <div class="tree">
+<span class="folder">src/app/students/</span>
+├── <span class="new">students.component.ts</span>    <span class="cmt">← Logic (TypeScript class)</span>
+├── <span class="new">students.component.html</span>  <span class="cmt">← UI (HTML template)</span>
+└── <span class="new">students.component.css</span>   <span class="cmt">← Styles</span>
+    </div>
+
+    <div class="section-label" style="margin-top:16px">students.component.ts — Full Explanation</div>
+    <pre><span class="kw">import</span> { <span class="cls">Component</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;  <span class="cmt">// Angular core import</span>
+
+<span class="dec">@Component</span>({                              <span class="cmt">// Decorator — "idhu Component" nu Angular ku solrom</span>
+  selector: <span class="str">'app-students'</span>,              <span class="cmt">// HTML tag name: &lt;app-students&gt;</span>
+  standalone: <span class="val">true</span>,                      <span class="cmt">// Modern Angular — NgModule vendam</span>
+  imports: [],                            <span class="cmt">// Use panra other modules/components</span>
+  templateUrl: <span class="str">'./students.component.html'</span>, <span class="cmt">// HTML file path</span>
+  styleUrl: <span class="str">'./students.component.css'</span>   <span class="cmt">// CSS file path</span>
+})
+<span class="kw">export class</span> <span class="cls">StudentsComponent</span> {         <span class="cmt">// TypeScript class — logic idhe</span>
+
+  <span class="cmt">// Properties — HTML la display panra data</span>
+  title = <span class="str">'Student List'</span>;               <span class="cmt">// String</span>
+  count = <span class="val">0</span>;                             <span class="cmt">// Number</span>
+  isVisible = <span class="val">true</span>;                     <span class="cmt">// Boolean</span>
+
+  students = [                            <span class="cmt">// Array of objects</span>
+    { id: <span class="val">1</span>, name: <span class="str">'Gurumoorthy'</span>, course: <span class="str">'Computer Science'</span> },
+    { id: <span class="val">2</span>, name: <span class="str">'Basha'</span>,       course: <span class="str">'Electrical'</span>       },
+    { id: <span class="val">3</span>, name: <span class="str">'Sridhar'</span>,     course: <span class="str">'Mechanical'</span>       },
+  ];
+
+  <span class="cmt">// Methods — Button click, events handle pannuvom</span>
+  <span class="fn">addStudent</span>() {
+    <span class="kw">this</span>.count++;
+    alert(<span class="str">'Student added!'</span>);
+  }
+
+  <span class="fn">deleteStudent</span>(id: <span class="kw">number</span>) {
+    <span class="kw">this</span>.students = <span class="kw">this</span>.students.<span class="fn">filter</span>(s => s.id !== id);
+  }
+}</pre>
+
+    <div class="tanglish">@Component = C# la [ApiController] attribute mathiri — "idhu Angular component" nu mark pannuvom. selector = HTML tag name — other component la &lt;app-students&gt; write panna idhe render aagum. Class la irukura variables ellam HTML la use pannalam.</div>
+
+    <div class="section-label" style="margin-top:16px">students.component.html — Template</div>
+    <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"container"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- {{ }} = Interpolation — class variable display pannuvom --&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>{{ title }}<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Total added: {{ count }}<span class="tag">&lt;/p&gt;</span>
+
+  <span class="cmt">&lt;!-- (click) = Event binding — method call pannuvom --&gt;</span>
+  <span class="tag">&lt;button</span> <span class="bind">(click)</span>=<span class="str">"addStudent()"</span><span class="tag">&gt;</span>Add Student<span class="tag">&lt;/button&gt;</span>
+
+  <span class="cmt">&lt;!-- *ngIf = Conditional show/hide --&gt;</span>
+  @if (isVisible) {
+    <span class="tag">&lt;p&gt;</span>This is visible!<span class="tag">&lt;/p&gt;</span>
+  }
+
+  <span class="cmt">&lt;!-- @for = Loop — array render pannuvom --&gt;</span>
+  <span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;tr&gt;&lt;th&gt;</span>ID<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Name<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Course<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Action<span class="tag">&lt;/th&gt;&lt;/tr&gt;</span>
+    @for (student of students; track student.id) {
+      <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;td&gt;</span>{{ student.id }}<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>{{ student.name }}<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>{{ student.course }}<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>
+          <span class="tag">&lt;button</span> <span class="bind">(click)</span>=<span class="str">"deleteStudent(student.id)"</span><span class="tag">&gt;</span>Delete<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    }
+  <span class="tag">&lt;/table&gt;</span>
+
+<span class="tag">&lt;/div&gt;</span></pre>
+
+    <div class="tanglish">{{ student.name }} = class la irukura variable HTML la show pannuvom. (click)="deleteStudent(student.id)" = button click panna method call pannuvom, student.id pass pannuvom. @for = array loop — har student ku oru table row create aagum.</div>
+
+    <div class="section-label" style="margin-top:16px">App la component show pannuvom — app.component.html</div>
+    <pre><span class="cmt">&lt;!-- app.component.html la add pannuvom --&gt;</span>
+<span class="tag">&lt;h1&gt;</span>My Angular App<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;app-students&gt;&lt;/app-students&gt;</span>   <span class="cmt">&lt;!-- StudentsComponent idhe render --&gt;</span></pre>
+
+    <pre><span class="cmt">// app.component.ts la StudentsComponent import pannuvom</span>
+<span class="dec">@Component</span>({
+  imports: [<span class="cls">StudentsComponent</span>],  <span class="cmt">// ← Add pannuvom</span>
+  ...
+})</pre>
+
+    <div class="success">ng serve run panna browser la student table show aagum!</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 5: INPUT/OUTPUT ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div>
+      <div class="step-title">@Input & @Output — Parent ↔ Child Communication</div>
+      <div class="step-sub">Components talk to each other — data pass pannuvom</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="tanglish">Oru big component break panni small components create pannuvom. StudentList (parent) la StudentCard (child) components create pannuvom. Parent → Child data pass = @Input. Child → Parent event send = @Output.</div>
+
+    <div class="cmd">ng g c student-card</div>
+
+    <pre><span class="cmt">// student-card.component.ts</span>
+<span class="kw">import</span> { <span class="cls">Component</span>, <span class="cls">Input</span>, <span class="cls">Output</span>, <span class="cls">EventEmitter</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dec">@Component</span>({
+  selector: <span class="str">'app-student-card'</span>,
+  standalone: <span class="val">true</span>,
+  template: `
+    &lt;div style="border:1px solid #ccc; padding:12px; margin:8px"&gt;
+      &lt;h3&gt;{{ name }}&lt;/h3&gt;           <span class="cmt">&lt;!-- @Input value display --&gt;</span>
+      &lt;p&gt;{{ course }}&lt;/p&gt;
+      &lt;button (click)="onDelete()"&gt;Delete&lt;/button&gt;
+    &lt;/div&gt;
+  `
+})
+<span class="kw">export class</span> <span class="cls">StudentCardComponent</span> {
+
+  <span class="cmt">// @Input — Parent irunthu data receive pannuvom</span>
+  <span class="dec">@Input</span>() name = <span class="str">''</span>;
+  <span class="dec">@Input</span>() course = <span class="str">''</span>;
+  <span class="dec">@Input</span>() studentId = <span class="val">0</span>;
+
+  <span class="cmt">// @Output — Parent ku event send pannuvom</span>
+  <span class="dec">@Output</span>() deleted = <span class="kw">new</span> <span class="cls">EventEmitter</span>&lt;<span class="kw">number</span>&gt;();
+
+  <span class="fn">onDelete</span>() {
+    <span class="kw">this</span>.deleted.<span class="fn">emit</span>(<span class="kw">this</span>.studentId);  <span class="cmt">// Parent ku id send pannuvom</span>
+  }
+}</pre>
+
+    <pre><span class="cmt">&lt;!-- students.component.html la use pannuvom --&gt;</span>
+@for (student of students; track student.id) {
+  <span class="tag">&lt;app-student-card</span>
+    <span class="bind">[name]</span>=<span class="str">"student.name"</span>        <span class="cmt">&lt;!-- [ ] = @Input bind pannuvom --&gt;</span>
+    <span class="bind">[course]</span>=<span class="str">"student.course"</span>
+    <span class="bind">[studentId]</span>=<span class="str">"student.id"</span>
+    <span class="bind">(deleted)</span>=<span class="str">"deleteStudent($event)"</span>  <span class="cmt">&lt;!-- ( ) = @Output event catch --&gt;</span>
+  <span class="tag">&gt;&lt;/app-student-card&gt;</span>
+}</pre>
+
+    <div class="tanglish">[name]="student.name" = parent la irukura student.name la value, child @Input() name ku pass pannuvom. (deleted)="deleteStudent($event)" = child emit pannina event catch pannuvom, $event = emit pannina value (studentId).</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 6: SERVICES ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">6</div>
+    <div>
+      <div class="step-title">Service Create Pannuvom</div>
+      <div class="step-sub">Shared logic — API calls, data management — component la direct ezhudhathe</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="tanglish">Service = reusable business logic. Student data 3 different components la use pananumna — 3 lom same code ezhudhathe. Oru service create panni inject pannuvom. .NET la IStudentService → StudentService mathiri thaan concept!</div>
+
+    <div class="cmd">ng generate service student</div>
+
+    <div class="tree">
+<span class="folder">src/app/</span>
+└── <span class="new">student.service.ts</span>    <span class="cmt">← Service file (no HTML, no CSS)</span>
+    </div>
+
+    <pre><span class="cmt">// student.service.ts — Static data kooda (API illama)</span>
+<span class="kw">import</span> { <span class="cls">Injectable</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dec">@Injectable</span>({
+  providedIn: <span class="str">'root'</span>   <span class="cmt">// App everywhere use panlam — Singleton</span>
+})
+<span class="kw">export class</span> <span class="cls">StudentService</span> {
+
+  <span class="cmt">// Private data — component directly access panna vendaam</span>
+  <span class="kw">private</span> students = [
+    { id: <span class="val">1</span>, name: <span class="str">'Gurumoorthy'</span>, course: <span class="str">'CS'</span>, age: <span class="val">25</span> },
+    { id: <span class="val">2</span>, name: <span class="str">'Basha'</span>,       course: <span class="str">'EE'</span>, age: <span class="val">24</span> },
+    { id: <span class="val">3</span>, name: <span class="str">'Sridhar'</span>,     course: <span class="str">'ME'</span>, age: <span class="val">26</span> },
+  ];
+
+  <span class="cmt">// Methods — CRUD operations</span>
+  <span class="fn">getAll</span>() {
+    <span class="kw">return</span> [...<span class="kw">this</span>.students];  <span class="cmt">// Copy return pannuvom — original change aagaathu</span>
+  }
+
+  <span class="fn">getById</span>(id: <span class="kw">number</span>) {
+    <span class="kw">return</span> <span class="kw">this</span>.students.<span class="fn">find</span>(s => s.id === id);
+  }
+
+  <span class="fn">add</span>(student: { name: <span class="kw">string</span>; course: <span class="kw">string</span>; age: <span class="kw">number</span> }) {
+    <span class="kw">const</span> newId = Math.<span class="fn">max</span>(...<span class="kw">this</span>.students.<span class="fn">map</span>(s => s.id)) + <span class="val">1</span>;
+    <span class="kw">this</span>.students.<span class="fn">push</span>({ id: newId, ...student });
+  }
+
+  <span class="fn">delete</span>(id: <span class="kw">number</span>) {
+    <span class="kw">this</span>.students = <span class="kw">this</span>.students.<span class="fn">filter</span>(s => s.id !== id);
+  }
+}</pre>
+
+    <pre><span class="cmt">// students.component.ts la service inject pannuvom</span>
+<span class="kw">import</span> { <span class="cls">Component</span>, <span class="cls">OnInit</span>, <span class="fn">inject</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { <span class="cls">StudentService</span> } <span class="kw">from</span> <span class="str">'../student.service'</span>;
+
+<span class="dec">@Component</span>({ ... })
+<span class="kw">export class</span> <span class="cls">StudentsComponent</span> <span class="kw">implements</span> <span class="cls">OnInit</span> {
+
+  <span class="cmt">// Modern way — inject() function</span>
+  <span class="kw">private</span> studentService = <span class="fn">inject</span>(<span class="cls">StudentService</span>);
+
+  <span class="cmt">// OR old way — constructor la</span>
+  <span class="cmt">// constructor(private studentService: StudentService) {}</span>
+
+  students: <span class="kw">any</span>[] = [];
+
+  <span class="fn">ngOnInit</span>() {
+    <span class="cmt">// Component load aana data load pannuvom</span>
+    <span class="kw">this</span>.students = <span class="kw">this</span>.studentService.<span class="fn">getAll</span>();
+  }
+
+  <span class="fn">deleteStudent</span>(id: <span class="kw">number</span>) {
+    <span class="kw">this</span>.studentService.<span class="fn">delete</span>(id);
+    <span class="kw">this</span>.students = <span class="kw">this</span>.studentService.<span class="fn">getAll</span>();  <span class="cmt">// Refresh</span>
+  }
+}</pre>
+
+    <div class="tanglish">inject(StudentService) = Angular automatically StudentService instance create panni inject pannuvom — new StudentService() manually create panna vendaam. ngOnInit = component ready aana first call — idhe data load pannuvom. Constructor la panna vendaam!</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 7: HTTP + API CONNECT ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">7</div>
+    <div>
+      <div class="step-title">🔥 API Connect — HttpClient Use Pannuvom</div>
+      <div class="step-sub">Real .NET API call panna — GET, POST, PUT, DELETE</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="warn">Before API connect — .NET Backend run aagutirukanum! Port 5260 la http://localhost:5260 (our project use pannuvom)</div>
+
+    <div class="section-label">STEP 7A — HttpClient Enable Pannuvom</div>
+    <pre><span class="cmt">// app.config.ts — HttpClient enable pannuvom</span>
+<span class="kw">import</span> { <span class="cls">ApplicationConfig</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { provideRouter } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+<span class="kw">import</span> { <span class="fn">provideHttpClient</span> } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;  <span class="cmt">// ← Import</span>
+<span class="kw">import</span> { routes } <span class="kw">from</span> <span class="str">'./app.routes'</span>;
+
+<span class="kw">export const</span> appConfig: <span class="cls">ApplicationConfig</span> = {
+  providers: [
+    <span class="fn">provideRouter</span>(routes),
+    <span class="fn">provideHttpClient</span>(),   <span class="cmt">// ← Add pannuvom — HTTP calls enable aagum</span>
+  ]
+};</pre>
+    <div class="tanglish">provideHttpClient() = Angular la HttpClient use panna permission. Once add pannuna app everywhere inject pannalam. .NET la services.AddHttpClient() mathiri thaan.</div>
+
+    <div class="section-label" style="margin-top:20px">STEP 7B — TypeScript Interface (Type Safety)</div>
+    <pre><span class="cmt">// models/student.model.ts — Create pannuvom</span>
+<span class="cmt">// (src/app/models/ folder create panni save pannuvom)</span>
+
+<span class="kw">export interface</span> <span class="cls">Student</span> {
+  id: <span class="kw">number</span>;
+  name: <span class="kw">string</span>;
+  email: <span class="kw">string</span>;
+  course: <span class="kw">string</span>;
+  age: <span class="kw">number</span>;
+}
+
+<span class="cmt">// API response wrapper (.NET ApiResponse&lt;T&gt; mathiri)</span>
+<span class="kw">export interface</span> <span class="cls">ApiResponse</span>&lt;T&gt; {
+  success: <span class="kw">boolean</span>;
+  message: <span class="kw">string</span>;
+  data: T;
+}</pre>
+
+    <div class="section-label" style="margin-top:20px">STEP 7C — Service la API Calls</div>
+    <pre><span class="cmt">// student.service.ts — HttpClient use panna update pannuvom</span>
+<span class="kw">import</span> { <span class="cls">Injectable</span>, <span class="fn">inject</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { <span class="cls">HttpClient</span> } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;      <span class="cmt">// ← Import</span>
+<span class="kw">import</span> { <span class="cls">Observable</span> } <span class="kw">from</span> <span class="str">'rxjs'</span>;                        <span class="cmt">// ← Import</span>
+<span class="kw">import</span> { <span class="cls">Student</span>, <span class="cls">ApiResponse</span> } <span class="kw">from</span> <span class="str">'./models/student.model'</span>;
+
+<span class="dec">@Injectable</span>({ providedIn: <span class="str">'root'</span> })
+<span class="kw">export class</span> <span class="cls">StudentService</span> {
+
+  <span class="cmt">// API base URL — our .NET project port</span>
+  <span class="kw">private</span> apiUrl = <span class="str">'http://localhost:5260/api/v2/students'</span>;
+
+  <span class="cmt">// HttpClient inject pannuvom</span>
+  <span class="kw">private</span> http = <span class="fn">inject</span>(<span class="cls">HttpClient</span>);
+
+  <span class="cmt">// ── GET ALL ────────────────────────────────────────────────</span>
+  <span class="cmt">// Observable&lt;T&gt; = async response — subscribe panna data varum</span>
+  <span class="fn">getAll</span>(): <span class="cls">Observable</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>[]&gt;&gt; {
+    <span class="kw">return this</span>.http.<span class="fn">get</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>[]&gt;&gt;(<span class="kw">this</span>.apiUrl);
+  }
+
+  <span class="cmt">// ── GET BY ID ──────────────────────────────────────────────</span>
+  <span class="fn">getById</span>(id: <span class="kw">number</span>): <span class="cls">Observable</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>&gt;&gt; {
+    <span class="kw">return this</span>.http.<span class="fn">get</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>&gt;&gt;(`${<span class="kw">this</span>.apiUrl}/${id}`);
+  }
+
+  <span class="cmt">// ── CREATE (POST) ──────────────────────────────────────────</span>
+  <span class="fn">create</span>(student: <span class="cls">Omit</span>&lt;<span class="cls">Student</span>, <span class="str">'id'</span>&gt;): <span class="cls">Observable</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>&gt;&gt; {
+    <span class="kw">return this</span>.http.<span class="fn">post</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>&gt;&gt;(<span class="kw">this</span>.apiUrl, student);
+  }
+
+  <span class="cmt">// ── UPDATE (PUT) ───────────────────────────────────────────</span>
+  <span class="fn">update</span>(id: <span class="kw">number</span>, student: <span class="cls">Student</span>): <span class="cls">Observable</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>&gt;&gt; {
+    <span class="kw">return this</span>.http.<span class="fn">put</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="cls">Student</span>&gt;&gt;(`${<span class="kw">this</span>.apiUrl}/${id}`, student);
+  }
+
+  <span class="cmt">// ── DELETE ─────────────────────────────────────────────────</span>
+  <span class="fn">delete</span>(id: <span class="kw">number</span>): <span class="cls">Observable</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="kw">any</span>&gt;&gt; {
+    <span class="kw">return this</span>.http.<span class="fn">delete</span>&lt;<span class="cls">ApiResponse</span>&lt;<span class="kw">any</span>&gt;&gt;(`${<span class="kw">this</span>.apiUrl}/${id}`);
+  }
+}</pre>
+
+    <div class="tanglish">http.get() = .NET la HttpClient.GetAsync() mathiri. Observable return pannuvom — .NET la Task mathiri. Type parameter &lt;ApiResponse&lt;Student[]&gt;&gt; = "API idha maathiri response tharum" nu TypeScript ku solrom. URL = backtick `` use pannuvom template string ku — ${} la variable use pannalam.</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 8: SHOW DATA ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">8</div>
+    <div>
+      <div class="step-title">API Data Show Pannuvom — subscribe()</div>
+      <div class="step-sub">Component la API call → data receive → HTML la display</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="section-label">students.component.ts — API call with loading + error</div>
+    <pre><span class="kw">import</span> { <span class="cls">Component</span>, <span class="cls">OnInit</span>, <span class="fn">inject</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { <span class="cls">StudentService</span> } <span class="kw">from</span> <span class="str">'../student.service'</span>;
+<span class="kw">import</span> { <span class="cls">Student</span> } <span class="kw">from</span> <span class="str">'../models/student.model'</span>;
+<span class="kw">import</span> { <span class="cls">CommonModule</span> } <span class="kw">from</span> <span class="str">'@angular/common'</span>;   <span class="cmt">// @for, @if ku</span>
+
+<span class="dec">@Component</span>({
+  selector: <span class="str">'app-students'</span>,
+  standalone: <span class="val">true</span>,
+  imports: [<span class="cls">CommonModule</span>],
+  templateUrl: <span class="str">'./students.component.html'</span>
+})
+<span class="kw">export class</span> <span class="cls">StudentsComponent</span> <span class="kw">implements</span> <span class="cls">OnInit</span> {
+
+  <span class="kw">private</span> studentService = <span class="fn">inject</span>(<span class="cls">StudentService</span>);
+
+  <span class="cmt">// State variables</span>
+  students: <span class="cls">Student</span>[] = [];
+  isLoading = <span class="val">false</span>;      <span class="cmt">// API call pandra pothu true</span>
+  errorMessage = <span class="str">''</span>;      <span class="cmt">// Error varum pothu message store</span>
+
+  <span class="fn">ngOnInit</span>() {
+    <span class="kw">this</span>.<span class="fn">loadStudents</span>();   <span class="cmt">// Component ready aana load</span>
+  }
+
+  <span class="fn">loadStudents</span>() {
+    <span class="kw">this</span>.isLoading = <span class="val">true</span>;
+    <span class="kw">this</span>.errorMessage = <span class="str">''</span>;
+
+    <span class="kw">this</span>.studentService.<span class="fn">getAll</span>().<span class="fn">subscribe</span>({
+
+      next: (response) => {                      <span class="cmt">// ✅ API success</span>
+        <span class="kw">if</span> (response.success) {
+          <span class="kw">this</span>.students = response.data;         <span class="cmt">// Data store pannuvom</span>
+        }
+        <span class="kw">this</span>.isLoading = <span class="val">false</span>;
+      },
+
+      error: (err) => {                          <span class="cmt">// ❌ API failed</span>
+        <span class="kw">this</span>.errorMessage = <span class="str">'Failed to load students: '</span> + err.message;
+        <span class="kw">this</span>.isLoading = <span class="val">false</span>;
+      }
+
+    });
+  }
+
+  <span class="fn">deleteStudent</span>(id: <span class="kw">number</span>) {
+    <span class="kw">if</span> (!confirm(<span class="str">'Delete pannalama?'</span>)) <span class="kw">return</span>;
+
+    <span class="kw">this</span>.studentService.<span class="fn">delete</span>(id).<span class="fn">subscribe</span>({
+      next: () => <span class="kw">this</span>.<span class="fn">loadStudents</span>(),   <span class="cmt">// Success → refresh list</span>
+      error: (err) => alert(<span class="str">'Delete failed!'</span>)
+    });
+  }
+}</pre>
+
+    <div class="section-label" style="margin-top:20px">students.component.html — Loading + Error + Data</div>
+    <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"container"</span><span class="tag">&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Student List<span class="tag">&lt;/h2&gt;</span>
+
+  <span class="cmt">&lt;!-- Loading state --&gt;</span>
+  @if (isLoading) {
+    <span class="tag">&lt;p&gt;</span>⏳ Loading...<span class="tag">&lt;/p&gt;</span>
+  }
+
+  <span class="cmt">&lt;!-- Error state --&gt;</span>
+  @if (errorMessage) {
+    <span class="tag">&lt;div</span> <span class="attr">style</span>=<span class="str">"color:red; background:#fee; padding:10px"</span><span class="tag">&gt;</span>
+      ❌ {{ errorMessage }}
+      <span class="tag">&lt;button</span> <span class="bind">(click)</span>=<span class="str">"loadStudents()"</span><span class="tag">&gt;</span>Retry<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  }
+
+  <span class="cmt">&lt;!-- Data table --&gt;</span>
+  @if (!isLoading && students.length > 0) {
+    <span class="tag">&lt;table</span> <span class="attr">border</span>=<span class="str">"1"</span> <span class="attr">style</span>=<span class="str">"width:100%; border-collapse:collapse"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;thead&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+          <span class="tag">&lt;th&gt;</span>ID<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Name<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Course<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Age<span class="tag">&lt;/th&gt;&lt;th&gt;</span>Actions<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+      <span class="tag">&lt;/thead&gt;</span>
+      <span class="tag">&lt;tbody&gt;</span>
+        @for (student of students; track student.id) {
+          <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;td&gt;</span>{{ student.id }}<span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span>{{ student.name }}<span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span>{{ student.course }}<span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span>{{ student.age }}<span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span>
+              <span class="tag">&lt;button</span> <span class="bind">(click)</span>=<span class="str">"deleteStudent(student.id)"</span><span class="tag">&gt;</span>Delete<span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;/td&gt;</span>
+          <span class="tag">&lt;/tr&gt;</span>
+        }
+      <span class="tag">&lt;/tbody&gt;</span>
+    <span class="tag">&lt;/table&gt;</span>
+  }
+
+  <span class="cmt">&lt;!-- Empty state --&gt;</span>
+  @if (!isLoading && students.length === 0) {
+    <span class="tag">&lt;p&gt;</span>No students found.<span class="tag">&lt;/p&gt;</span>
+  }
+
+<span class="tag">&lt;/div&gt;</span></pre>
+
+    <div class="tanglish">subscribe() = Observable la data receive pannuvom. next = API success → data varum. error = network fail, 500 error. isLoading = true aana "Loading..." show, false aana data show. Always 3 states handle pannuvom: loading, error, data.</div>
+
+    <div class="note">JWT Token venama API la, Authorization header add panna JWT interceptor use pannuvom — our existing project la irukku!</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 9: FORMS ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">9</div>
+    <div>
+      <div class="step-title">Reactive Form — Student Create Pannuvom</div>
+      <div class="step-sub">FormBuilder, FormGroup, Validators — POST API call</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="cmd">ng g c add-student</div>
+
+    <pre><span class="cmt">// add-student.component.ts</span>
+<span class="kw">import</span> { <span class="cls">Component</span>, <span class="cls">Output</span>, <span class="cls">EventEmitter</span>, <span class="fn">inject</span> } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { <span class="cls">FormBuilder</span>, <span class="cls">ReactiveFormsModule</span>, <span class="cls">Validators</span> } <span class="kw">from</span> <span class="str">'@angular/forms'</span>;
+<span class="kw">import</span> { <span class="cls">StudentService</span> } <span class="kw">from</span> <span class="str">'../student.service'</span>;
+
+<span class="dec">@Component</span>({
+  selector: <span class="str">'app-add-student'</span>,
+  standalone: <span class="val">true</span>,
+  imports: [<span class="cls">ReactiveFormsModule</span>],   <span class="cmt">// ← Required for reactive forms</span>
+  templateUrl: <span class="str">'./add-student.component.html'</span>
+})
+<span class="kw">export class</span> <span class="cls">AddStudentComponent</span> {
+
+  <span class="kw">private</span> fb = <span class="fn">inject</span>(<span class="cls">FormBuilder</span>);
+  <span class="kw">private</span> studentService = <span class="fn">inject</span>(<span class="cls">StudentService</span>);
+
+  <span class="dec">@Output</span>() studentAdded = <span class="kw">new</span> <span class="cls">EventEmitter</span>&lt;<span class="kw">void</span>&gt;();  <span class="cmt">// Parent notify</span>
+
+  isSubmitting = <span class="val">false</span>;
+  successMessage = <span class="str">''</span>;
+  errorMessage = <span class="str">''</span>;
+
+  <span class="cmt">// Form define pannuvom with validations</span>
+  studentForm = <span class="kw">this</span>.fb.<span class="fn">group</span>({
+    name:   [<span class="str">''</span>, [<span class="cls">Validators</span>.required, <span class="cls">Validators</span>.<span class="fn">minLength</span>(<span class="val">3</span>)]],
+    email:  [<span class="str">''</span>, [<span class="cls">Validators</span>.required, <span class="cls">Validators</span>.email]],
+    course: [<span class="str">''</span>, <span class="cls">Validators</span>.required],
+    age:    [<span class="val">null</span>, [<span class="cls">Validators</span>.required, <span class="cls">Validators</span>.<span class="fn">min</span>(<span class="val">10</span>), <span class="cls">Validators</span>.<span class="fn">max</span>(<span class="val">99</span>)]]
+  });
+
+  <span class="cmt">// Shortcut — form controls easy access ku</span>
+  <span class="fn">get</span> f() { <span class="kw">return this</span>.studentForm.controls; }
+
+  <span class="fn">onSubmit</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.studentForm.invalid) <span class="kw">return</span>;  <span class="cmt">// Validation fail = stop</span>
+
+    <span class="kw">this</span>.isSubmitting = <span class="val">true</span>;
+    <span class="kw">const</span> formData = <span class="kw">this</span>.studentForm.value <span class="kw">as any</span>;
+
+    <span class="kw">this</span>.studentService.<span class="fn">create</span>(formData).<span class="fn">subscribe</span>({
+      next: (res) => {
+        <span class="kw">this</span>.successMessage = <span class="str">'Student added successfully!'</span>;
+        <span class="kw">this</span>.studentForm.<span class="fn">reset</span>();             <span class="cmt">// Form clear pannuvom</span>
+        <span class="kw">this</span>.studentAdded.<span class="fn">emit</span>();             <span class="cmt">// Parent ku notify</span>
+        <span class="kw">this</span>.isSubmitting = <span class="val">false</span>;
+      },
+      error: (err) => {
+        <span class="kw">this</span>.errorMessage = <span class="str">'Failed to add student!'</span>;
+        <span class="kw">this</span>.isSubmitting = <span class="val">false</span>;
+      }
+    });
+  }
+}</pre>
+
+    <pre><span class="cmt">&lt;!-- add-student.component.html --&gt;</span>
+<span class="tag">&lt;form</span> <span class="bind">[formGroup]</span>=<span class="str">"studentForm"</span> <span class="bind">(ngSubmit)</span>=<span class="str">"onSubmit()"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Name field --&gt;</span>
+  <span class="tag">&lt;div&gt;</span>
+    <span class="tag">&lt;label&gt;</span>Name<span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">formControlName</span>=<span class="str">"name"</span> <span class="attr">placeholder</span>=<span class="str">"Enter name"</span><span class="tag">&gt;</span>
+    <span class="cmt">&lt;!-- Error: touched = user clicked and left the field --&gt;</span>
+    @if (f['name'].invalid && f['name'].touched) {
+      @if (f['name'].errors?.['required'])  { <span class="tag">&lt;span&gt;</span>Name required<span class="tag">&lt;/span&gt;</span> }
+      @if (f['name'].errors?.['minlength']) { <span class="tag">&lt;span&gt;</span>Min 3 chars<span class="tag">&lt;/span&gt;</span>   }
+    }
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="cmt">&lt;!-- Email field --&gt;</span>
+  <span class="tag">&lt;div&gt;</span>
+    <span class="tag">&lt;label&gt;</span>Email<span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">formControlName</span>=<span class="str">"email"</span> <span class="attr">type</span>=<span class="str">"email"</span><span class="tag">&gt;</span>
+    @if (f['email'].invalid && f['email'].touched) {
+      @if (f['email'].errors?.['required']) { <span class="tag">&lt;span&gt;</span>Email required<span class="tag">&lt;/span&gt;</span> }
+      @if (f['email'].errors?.['email'])    { <span class="tag">&lt;span&gt;</span>Invalid email<span class="tag">&lt;/span&gt;</span>   }
+    }
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="cmt">&lt;!-- Course field --&gt;</span>
+  <span class="tag">&lt;div&gt;</span>
+    <span class="tag">&lt;label&gt;</span>Course<span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;select</span> <span class="attr">formControlName</span>=<span class="str">"course"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">""</span><span class="tag">&gt;</span>Select course<span class="tag">&lt;/option&gt;</span>
+      <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">"CS"</span><span class="tag">&gt;</span>Computer Science<span class="tag">&lt;/option&gt;</span>
+      <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">"EE"</span><span class="tag">&gt;</span>Electrical<span class="tag">&lt;/option&gt;</span>
+      <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">"ME"</span><span class="tag">&gt;</span>Mechanical<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;/select&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="cmt">&lt;!-- Age field --&gt;</span>
+  <span class="tag">&lt;div&gt;</span>
+    <span class="tag">&lt;label&gt;</span>Age<span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">formControlName</span>=<span class="str">"age"</span> <span class="attr">type</span>=<span class="str">"number"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="cmt">&lt;!-- Submit button — form invalid aana disabled --&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="str">"submit"</span> <span class="bind">[disabled]</span>=<span class="str">"studentForm.invalid || isSubmitting"</span><span class="tag">&gt;</span>
+    {{ isSubmitting ? 'Saving...' : 'Add Student' }}
+  <span class="tag">&lt;/button&gt;</span>
+
+  <span class="cmt">&lt;!-- Success/Error messages --&gt;</span>
+  @if (successMessage) { <span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="str">"color:green"</span><span class="tag">&gt;</span>{{ successMessage }}<span class="tag">&lt;/p&gt;</span> }
+  @if (errorMessage)   { <span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="str">"color:red"</span><span class="tag">&gt;</span>{{ errorMessage }}<span class="tag">&lt;/p&gt;</span>   }
+
+<span class="tag">&lt;/form&gt;</span></pre>
+
+    <div class="tanglish">FormBuilder.group() = form define pannuvom. Validators.required, email, minLength = built-in validations. form.invalid = any field invalid aana true. f['name'].touched = user antha field click panni leave pannava — then error show pannuvom (form open pannane error show pannidhathe). [disabled]="form.invalid" = submit button invalid aana disable.</div>
+
+  </div>
+</div>
+
+<!-- ===== STEP 10: ROUTING ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">10</div>
+    <div>
+      <div class="step-title">Routing — Multiple Pages Setup</div>
+      <div class="step-sub">URL → Component mapping — SPA navigation</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <pre><span class="cmt">// app.routes.ts — Routes define pannuvom</span>
+<span class="kw">import</span> { <span class="cls">Routes</span> } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> routes: <span class="cls">Routes</span> = [
+
+  <span class="cmt">// Default route — / → /students redirect</span>
+  { path: <span class="str">''</span>, redirectTo: <span class="str">'/students'</span>, pathMatch: <span class="str">'full'</span> },
+
+  <span class="cmt">// Lazy loading — page navigate panna pothu download</span>
+  {
+    path: <span class="str">'students'</span>,
+    <span class="fn">loadComponent</span>: () =>
+      <span class="kw">import</span>(<span class="str">'./students/students.component'</span>)
+        .<span class="fn">then</span>(m => m.<span class="cls">StudentsComponent</span>)
+  },
+  {
+    path: <span class="str">'add-student'</span>,
+    <span class="fn">loadComponent</span>: () =>
+      <span class="kw">import</span>(<span class="str">'./add-student/add-student.component'</span>)
+        .<span class="fn">then</span>(m => m.<span class="cls">AddStudentComponent</span>)
+  },
+  {
+    path: <span class="str">'students/:id'</span>,        <span class="cmt">// Dynamic route param</span>
+    <span class="fn">loadComponent</span>: () =>
+      <span class="kw">import</span>(<span class="str">'./student-detail/student-detail.component'</span>)
+        .<span class="fn">then</span>(m => m.<span class="cls">StudentDetailComponent</span>)
+  },
+
+  <span class="cmt">// 404 page</span>
+  { path: <span class="str">'**'</span>, redirectTo: <span class="str">'/students'</span> }
+];</pre>
+
+    <pre><span class="cmt">&lt;!-- app.component.html — Navigation + Router outlet --&gt;</span>
+<span class="tag">&lt;nav&gt;</span>
+  <span class="cmt">&lt;!-- routerLink = &lt;a href&gt; mathiri but no page reload --&gt;</span>
+  <span class="tag">&lt;a</span> <span class="attr">routerLink</span>=<span class="str">"/students"</span>    <span class="attr">routerLinkActive</span>=<span class="str">"active"</span><span class="tag">&gt;</span>Students<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;a</span> <span class="attr">routerLink</span>=<span class="str">"/add-student"</span> <span class="attr">routerLinkActive</span>=<span class="str">"active"</span><span class="tag">&gt;</span>Add Student<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/nav&gt;</span>
+
+<span class="cmt">&lt;!-- Active route component idhe render aagum --&gt;</span>
+<span class="tag">&lt;router-outlet&gt;&lt;/router-outlet&gt;</span></pre>
+
+    <pre><span class="cmt">// app.component.ts la RouterOutlet, RouterLink import pannuvom</span>
+<span class="dec">@Component</span>({
+  imports: [<span class="cls">RouterOutlet</span>, <span class="cls">RouterLink</span>, <span class="cls">RouterLinkActive</span>],
+  ...
+})</pre>
+
+    <pre><span class="cmt">// Route params read — student detail page</span>
+<span class="kw">import</span> { <span class="cls">ActivatedRoute</span> } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export class</span> <span class="cls">StudentDetailComponent</span> <span class="kw">implements</span> <span class="cls">OnInit</span> {
+  <span class="kw">private</span> route = <span class="fn">inject</span>(<span class="cls">ActivatedRoute</span>);
+  <span class="kw">private</span> studentService = <span class="fn">inject</span>(<span class="cls">StudentService</span>);
+  student: <span class="cls">Student</span> | <span class="kw">null</span> = <span class="kw">null</span>;
+
+  <span class="fn">ngOnInit</span>() {
+    <span class="kw">const</span> id = <span class="kw">this</span>.route.snapshot.paramMap.<span class="fn">get</span>(<span class="str">'id'</span>);  <span class="cmt">// URL la :id</span>
+    <span class="kw">if</span> (id) {
+      <span class="kw">this</span>.studentService.<span class="fn">getById</span>(+id).<span class="fn">subscribe</span>({  <span class="cmt">// +id = string to number</span>
+        next: (res) => <span class="kw">this</span>.student = res.data
+      });
+    }
+  }
+}</pre>
+
+    <div class="tanglish">routerLink = &lt;a href&gt; mathiri but page reload illai — SPA! routerLinkActive = current route match aana CSS class add pannuvom (active link style). &lt;router-outlet&gt; = route change aana idhe component swap aagum. :id = dynamic param — /students/5 aana id='5' varum.</div>
+
+  </div>
+</div>
+
+<!-- ===== FULL CHECKLIST ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">✅</div>
+    <div>
+      <div class="step-title">Complete Checklist — Namma Learn Pannomaa?</div>
+      <div class="step-sub">Har concept practice pannuvom</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <table>
+      <tr><th>Topic</th><th>Practice Task</th><th>Status</th></tr>
+      <tr><td>1. Install</td><td>Node + Angular CLI install, ng version check</td><td>☐</td></tr>
+      <tr><td>2. Create Project</td><td>ng new my-app, ng serve, browser la check</td><td>☐</td></tr>
+      <tr><td>3. Component</td><td>ng g c students — properties define, HTML display</td><td>☐</td></tr>
+      <tr><td>4. Data Binding</td><td>{{ }}, [disabled], (click), [(ngModel)] — 4 types practice</td><td>☐</td></tr>
+      <tr><td>5. Directives</td><td>@if, @for table render, [ngClass] conditional style</td><td>☐</td></tr>
+      <tr><td>6. @Input/@Output</td><td>Parent → Child data pass, Child → Parent event emit</td><td>☐</td></tr>
+      <tr><td>7. Service</td><td>ng g s student, CRUD methods, component la inject</td><td>☐</td></tr>
+      <tr><td>8. HttpClient</td><td>provideHttpClient() → API call → subscribe → show data</td><td>☐</td></tr>
+      <tr><td>9. Reactive Forms</td><td>FormBuilder.group(), Validators, onSubmit POST API</td><td>☐</td></tr>
+      <tr><td>10. Routing</td><td>Routes define, routerLink nav, ActivatedRoute param read</td><td>☐</td></tr>
+    </table>
+
+    <div class="success" style="margin-top:20px">Ellam complete aana — our DotNetMinimalAPI-Angular project open panni code study pannuvom! Real implementation reference aa use pannuvom.</div>
+  </div>
+</div>
+
+<!-- ===== QUICK REFERENCE ===== -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">⚡</div>
+    <div>
+      <div class="step-title">Quick Reference — Commands & Cheat Sheet</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <div class="section-label">CLI Commands</div>
+    <div class="cmd-block">
+      <span class="cmd-comment">New project</span>
+      <span class="cmd-line">ng new project-name</span>
+      <span class="cmd-comment">Start dev server</span>
+      <span class="cmd-line">ng serve</span>
+      <span class="cmd-comment">Generate component</span>
+      <span class="cmd-line">ng generate component students  (or: ng g c students)</span>
+      <span class="cmd-comment">Generate service</span>
+      <span class="cmd-line">ng generate service student     (or: ng g s student)</span>
+      <span class="cmd-comment">Generate pipe</span>
+      <span class="cmd-line">ng generate pipe search-filter  (or: ng g p search-filter)</span>
+      <span class="cmd-comment">Build production</span>
+      <span class="cmd-line">ng build --configuration production</span>
+      <span class="cmd-comment">Install package</span>
+      <span class="cmd-line">npm install @microsoft/signalr</span>
+    </div>
+
+    <div class="section-label" style="margin-top:20px">Data Binding Cheat Sheet</div>
+    <table>
+      <tr><th>Syntax</th><th>Direction</th><th>Example</th><th>Use</th></tr>
+      <tr><td>{{ value }}</td><td>Class → HTML</td><td>{{ name }}</td><td>Display data</td></tr>
+      <tr><td>[property]</td><td>Class → HTML</td><td>[disabled]="loading"</td><td>Set attribute</td></tr>
+      <tr><td>(event)</td><td>HTML → Class</td><td>(click)="save()"</td><td>Handle events</td></tr>
+      <tr><td>[(ngModel)]</td><td>Both ways</td><td>[(ngModel)]="name"</td><td>Form inputs</td></tr>
+      <tr><td>[formControl]</td><td>Reactive</td><td>formControlName="name"</td><td>Reactive forms</td></tr>
+    </table>
+
+    <div class="section-label" style="margin-top:20px">Common Errors & Fixes</div>
+    <table>
+      <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+      <tr><td>NullInjectorError: HttpClient</td><td>provideHttpClient() missing</td><td>app.config.ts la add pannuvom</td></tr>
+      <tr><td>Can't bind to 'ngModel'</td><td>FormsModule missing</td><td>imports: [FormsModule] add</td></tr>
+      <tr><td>Can't bind to 'formGroup'</td><td>ReactiveFormsModule missing</td><td>imports: [ReactiveFormsModule] add</td></tr>
+      <tr><td>CORS error</td><td>Backend allow panna illai</td><td>.NET la AddCors, UseCors pannuvom</td></tr>
+      <tr><td>404 Not Found (API)</td><td>URL wrong or backend down</td><td>URL check, dotnet run panna check</td></tr>
+      <tr><td>NG0100 ExpressionChanged</td><td>ngAfterViewInit la value change</td><td>setTimeout wrap pannuvom</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<div class="footer">
+  <p>🎯 Angular Step by Step Guide | Gurumoorthy M | 2026</p>
+  <p style="margin-top:8px;color:#3d444d">Install → Create → Component → Service → HttpClient → API Connect → Done!</p>
+  <p style="margin-top:6px;color:#3d444d">Reference Project: <strong>C:\Projects\DotNetWithAngular\frontend</strong></p>
+</div>
+
+</body>
+</html>
