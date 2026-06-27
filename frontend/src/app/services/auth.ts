@@ -34,7 +34,7 @@ export interface RefreshTokenRequest {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private apiUrl = 'https://localhost:5260/api/v1/auth';
+  private apiUrl = 'http://localhost:5260/api/v1/auth';
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();

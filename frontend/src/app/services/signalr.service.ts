@@ -40,7 +40,7 @@ export type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'rec
 export class SignalRService implements OnDestroy {
 
   private hubConnection!: signalR.HubConnection;
-  private readonly hubUrl = 'https://localhost:5260/hubs/dashboard';
+  private readonly hubUrl = 'http://localhost:5260/hubs/dashboard';
 
   // BehaviorSubjects - components subscribe pannalam
   private statsSubject = new BehaviorSubject<DashboardStats | null>(null);
