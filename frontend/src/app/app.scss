@@ -1,0 +1,16 @@
+.app-shell { min-height: 100vh; background: #0d1117; }
+.navbar {
+  background: #161b22; border-bottom: 1px solid #30363d; padding: 0 24px;
+  display: flex; align-items: center; gap: 20px; height: 60px; position: sticky; top: 0; z-index: 100;
+}
+.nav-brand { color: #58a6ff; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+.nav-links { display: flex; gap: 5px; flex: 1;
+  a { color: #8b949e; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; transition: all 0.2s;
+    &:hover { color: #c9d1d9; background: #21262d; }
+    &.active { color: #58a6ff; background: rgba(88,166,255,0.1); } } }
+.nav-user { display: flex; align-items: center; gap: 10px; }
+.user-info { color: #c9d1d9; font-size: 13px; }
+.role { background: rgba(88,166,255,0.15); color: #58a6ff; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 5px; }
+.logout-btn { background: none; border: 1px solid #f85149; color: #f85149; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s;
+  &:hover { background: rgba(248,81,73,0.15); } }
+.content { max-width: 1200px; margin: 0 auto; padding: 20px; }

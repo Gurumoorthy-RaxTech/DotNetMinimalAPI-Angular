@@ -1,0 +1,22 @@
+<!-- App Shell - Navbar + Router Outlet -->
+<div class="app-shell" *ngIf="isLoggedIn">
+  <nav class="navbar">
+    <div class="nav-brand">🎓 SmartSchool</div>
+    <div class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active">🏠 Dashboard</a>
+      <a routerLink="/students" routerLinkActive="active">👨‍🎓 Students</a>
+    </div>
+    <div class="nav-user">
+      <span class="user-info">👤 {{ username }} <span class="role">{{ role }}</span></span>
+      <button class="logout-btn" (click)="logout()">🚪 Logout</button>
+    </div>
+  </nav>
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>
+
+<!-- No navbar on login page -->
+<div *ngIf="!isLoggedIn">
+  <router-outlet />
+</div>

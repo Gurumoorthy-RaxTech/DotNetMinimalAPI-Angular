@@ -1,0 +1,39 @@
+<!-- DASHBOARD -->
+<div class="dashboard">
+  <div class="welcome-card">
+    <h2>👋 Welcome, {{ username }}!</h2>
+    <p>Role: <span class="role-badge">{{ role }}</span></p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <div class="stat-icon">🎓</div>
+      <div class="stat-info"><div class="stat-value">3</div><div class="stat-label">Total Students</div></div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">🔐</div>
+      <div class="stat-info"><div class="stat-value">JWT</div><div class="stat-label">Auth Active</div></div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon">📡</div>
+      <div class="stat-info"><div class="stat-value">v1 / v2</div><div class="stat-label">API Versions</div></div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-info"><div class="stat-value">.NET 9</div><div class="stat-label">Minimal API</div></div>
+    </div>
+  </div>
+  <div class="info-cards">
+    <div class="info-card">
+      <h3>🔑 Demo Login Credentials</h3>
+      <div class="cred-item"><strong>Admin:</strong> admin / Admin&#64;123 — Full CRUD access</div>
+      <div class="cred-item"><strong>Student:</strong> student / Student&#64;123 — Read-only access</div>
+    </div>
+    <div class="info-card">
+      <h3>🌐 API Endpoints</h3>
+      <div class="endpoint">POST /api/v1/auth/login</div>
+      <div class="endpoint">GET /api/v1/students</div>
+      <div class="endpoint">GET /api/v2/students?course=CS</div>
+      <div class="endpoint">POST /api/v1/students (Admin only)</div>
+    </div>
+  </div>
+</div>

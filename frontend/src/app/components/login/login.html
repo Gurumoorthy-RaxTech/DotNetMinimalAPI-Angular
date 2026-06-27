@@ -1,0 +1,32 @@
+<!-- LOGIN PAGE -->
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">🎓</div>
+      <h2>SmartSchool</h2>
+      <p>Minimal API + JWT + Angular</p>
+    </div>
+    <div class="demo-section">
+      <p>Demo Credentials:</p>
+      <button type="button" class="demo-btn admin-btn" (click)="fillAdmin()">👑 Admin Login</button>
+      <button type="button" class="demo-btn student-btn" (click)="fillStudent()">🎒 Student Login</button>
+    </div>
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" [(ngModel)]="loginData.username" placeholder="Enter username" required class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="loginData.password" placeholder="Enter password" required class="form-control" />
+        <span class="toggle-pwd" (click)="showPassword = !showPassword">{{ showPassword ? '🙈' : '👁️' }}</span>
+      </div>
+      @if (errorMessage) {
+        <div class="error-msg">❌ {{ errorMessage }}</div>
+      }
+      <button type="submit" class="login-btn" [disabled]="isLoading">
+        @if (isLoading) { <span>⏳ Logging in...</span> } @else { <span>🔐 Login</span> }
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d1117 0%, #1a237e 100%);
+  padding: 20px;
+}
+.login-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+  .logo { font-size: 48px; }
+  h2 { color: #58a6ff; font-size: 28px; margin: 0; }
+  p { color: #8b949e; font-size: 13px; }
+}
+.demo-section {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  p { color: #8b949e; font-size: 12px; margin-bottom: 10px; }
+}
+.demo-btn {
+  margin: 5px; padding: 8px 16px; border: none; border-radius: 6px;
+  cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s;
+  &.admin-btn { background: #21262d; color: #f0883e; border: 1px solid #f0883e; }
+  &.student-btn { background: #21262d; color: #58a6ff; border: 1px solid #58a6ff; }
+  &:hover { transform: translateY(-2px); }
+}
+.form-group {
+  margin-bottom: 20px; position: relative;
+  label { display: block; color: #c9d1d9; font-size: 14px; margin-bottom: 6px; }
+}
+.form-control {
+  width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d;
+  border-radius: 8px; color: #f0f6fc; font-size: 15px; box-sizing: border-box;
+  transition: border-color 0.2s;
+  &:focus { outline: none; border-color: #58a6ff; }
+  &::placeholder { color: #484f58; }
+}
+.toggle-pwd { position: absolute; right: 12px; top: 38px; cursor: pointer; font-size: 16px; }
+.error-msg {
+  background: rgba(248,81,73,0.1); border: 1px solid #f85149; border-radius: 6px;
+  padding: 10px; color: #f85149; font-size: 13px; margin-bottom: 15px;
+}
+.login-btn {
+  width: 100%; padding: 14px; background: linear-gradient(135deg, #238636, #2ea043);
+  color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  &:hover:not(:disabled) { transform: translateY(-2px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}

@@ -1,0 +1,65 @@
+<!-- STUDENTS PAGE -->
+<div class="students-container">
+  <div class="page-header">
+    <h2>👨‍🎓 Students Management</h2>
+    @if (isAdmin) { <button class="btn btn-primary" (click)="openAddForm()">➕ Add Student</button> }
+  </div>
+  <div class="filter-bar">
+    <input type="text" placeholder="🔍 Search by name or email..." [(ngModel)]="searchText" (input)="applySearch()" class="filter-input" />
+    <input type="text" placeholder="Filter by course..." [(ngModel)]="courseFilter" class="filter-input" />
+    <button class="btn btn-secondary" (click)="loadStudents()">🔄 Apply Filter</button>
+  </div>
+  @if (successMessage) { <div class="alert alert-success">✅ {{ successMessage }}</div> }
+  @if (errorMessage) { <div class="alert alert-error">❌ {{ errorMessage }}</div> }
+  @if (isLoading) {
+    <div class="loading">⏳ Loading students...</div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Email</th><th>Course</th><th>Age</th>
+            @if (isAdmin) { <th>Actions</th> }
+          </tr>
+        </thead>
+        <tbody>
+          @for (student of filteredStudents; track student.id) {
+            <tr>
+              <td><span class="id-badge">{{ student.id }}</span></td>
+              <td><strong>{{ student.name }}</strong></td>
+              <td>{{ student.email }}</td>
+              <td><span class="course-badge">{{ student.course }}</span></td>
+              <td>{{ student.age }}</td>
+              @if (isAdmin) {
+                <td>
+                  <button class="btn-icon" (click)="openEditForm(student)">✏️</button>
+                  <button class="btn-icon" (click)="deleteStudent(student.id)">🗑️</button>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr><td [attr.colspan]="isAdmin ? 6 : 5" class="no-data">No students found</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="total-count">Total: {{ filteredStudents.length }} students</div>
+  }
+  @if (showForm) {
+    <div class="modal-overlay" (click)="showForm = false">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>{{ isEditing ? '✏️ Edit Student' : '➕ Add Student' }}</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Name *</label><input type="text" [(ngModel)]="currentStudent.name" placeholder="Full name" class="form-control" /></div>
+          <div class="form-group"><label>Email *</label><input type="email" [(ngModel)]="currentStudent.email" placeholder="email@example.com" class="form-control" /></div>
+          <div class="form-group"><label>Course *</label><input type="text" [(ngModel)]="currentStudent.course" placeholder="Course name" class="form-control" /></div>
+          <div class="form-group"><label>Age *</label><input type="number" [(ngModel)]="currentStudent.age" placeholder="Age" class="form-control" /></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" (click)="showForm = false">Cancel</button>
+          <button class="btn btn-primary" (click)="saveStudent()">{{ isEditing ? '💾 Update' : '➕ Add' }}</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
